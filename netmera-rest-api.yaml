@@ -3011,8 +3011,6 @@ paths:
         Fetches the push notifications stored on the server for a user. Supports pagination and
         filtering by status or time range.
 
-        ### Pagination
-
         After the first call, the response returns a `prms.index` value — the `pushInstanceId`
         of the last message in that batch. Pass that value as `prms.index` in the next request
         to fetch the next page.
