@@ -9,36 +9,40 @@ regenerates the reference whenever it changes.
 1. Edit `netmera-rest-api.yaml` on a branch and open a pull request.
 2. CI parses the file, lints it with Redocly, and checks that no live-verified
    response was dropped.
-3. Merge to `main`. CI tells GitBook to refresh immediately; without that call
-   GitBook would pick the change up on its own within a few hours.
+3. Merge to `main`. GitBook reads the raw URL on its own schedule and picks the
+   change up within a few hours. To publish immediately, open the OpenAPI panel in
+   GitBook and click **Check for updates**.
 
 Never upload the file to GitBook by hand. The published spec is bound to this URL,
 and a manual upload would be overwritten by the next push.
 
-## Required repository settings
+## Setup
 
-Add one secret under **Settings → Secrets and variables → Actions**:
+No secrets or repository variables are needed. CI only validates the spec; it does not
+talk to GitBook.
 
-| Name | Value |
-| --- | --- |
-| `GITBOOK_TOKEN` | GitBook API token |
-
-And three variables:
-
-| Name | Value | Required |
-| --- | --- | --- |
-| `GITBOOK_ORGANIZATION_ID` | GitBook organization ID | Yes |
-| `GITBOOK_SPEC_NAME` | Defaults to `netmera-rest-api` | Only to override |
-| `SPEC_URL` | Defaults to this repo's raw URL on `main` | Only to override |
-
-The source URL GitBook reads is:
+GitBook is pointed at the raw URL of this file on `main`:
 
 ```
 https://raw.githubusercontent.com/ecemnaz1/netmera-rest-api/main/netmera-rest-api.yaml
 ```
 
-The repository must stay public — GitBook cannot read a source that sits behind a
-login.
+Two things about that URL matter. It must contain `main`, not a commit SHA — a
+SHA-pinned URL never refreshes. And the repository must stay public, because GitBook
+cannot read a source that sits behind a login.
+
+## What CI checks
+
+| Step | Purpose |
+| --- | --- |
+| Parse | The file is valid YAML. |
+| Redocly lint | The file is a valid OpenAPI document. |
+| Guard | No `x-netmera-verified` marker was dropped since the base branch. |
+
+The lint step is expected to report warnings and still pass. `info-license` is expected
+because the source documentation states no license. `operation-4xx-response` is expected
+because error responses are documented only where the specific failure is known, never
+added generically. Neither is a defect to fix.
 
 ## Conventions
 
