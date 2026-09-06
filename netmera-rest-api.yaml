@@ -3006,7 +3006,7 @@ paths:
     post:
       operationId: getAllInbox
       tags: [Inbox]
-      summary: Inbox Retrieval
+      summary: inbox/getAllInbox
       description: |
         Fetches the push notifications stored on the server for a user. Supports pagination and
         filtering by status or time range.
@@ -3088,7 +3088,7 @@ paths:
     get:
       operationId: getInboxMessage
       tags: [Inbox]
-      summary: Retrieve a Single Inbox Message
+      summary: inbox/get
       description: Retrieves a single inbox message using its push instance ID.
       parameters:
         - name: piid
@@ -3130,7 +3130,7 @@ paths:
     post:
       operationId: inboxStatusChange
       tags: [Inbox]
-      summary: Change Message Status
+      summary: inbox/statusChange
       description: |
         Updates the status of one or more inbox messages. `piids` defines the messages whose
         statuses will be updated.
