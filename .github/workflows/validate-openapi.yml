@@ -1,0 +1,61 @@
+name: Validate OpenAPI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "netmera-rest-api.yaml"
+      - ".github/workflows/validate-openapi.yml"
+      - "scripts/check_verified.py"
+  pull_request:
+    paths:
+      - "netmera-rest-api.yaml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate spec
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Parse YAML
+        run: python3 -c "import yaml; yaml.safe_load(open('netmera-rest-api.yaml')); print('parses')"
+
+      - name: Lint OpenAPI
+        # Two warning classes are expected and must not be "fixed":
+        #   info-license          — the source documentation states no license.
+        #   operation-4xx-response — error responses are documented only where the
+        #                            specific failure has been observed or is documented
+        #                            for that endpoint, never added generically.
+        run: npx -y @redocly/cli@latest lint netmera-rest-api.yaml --format=stylish
+
+      - name: Fetch baseline spec from base branch
+        id: baseline
+        run: |
+          BASE="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -n "$BASE" ] && git cat-file -e "$BASE:netmera-rest-api.yaml" 2>/dev/null; then
+            git show "$BASE:netmera-rest-api.yaml" > /tmp/baseline.yaml
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Guard live-verified responses
+        run: |
+          if [ "${{ steps.baseline.outputs.found }}" = "true" ]; then
+            python3 scripts/check_verified.py netmera-rest-api.yaml /tmp/baseline.yaml
+          else
+            python3 scripts/check_verified.py netmera-rest-api.yaml
+          fi
