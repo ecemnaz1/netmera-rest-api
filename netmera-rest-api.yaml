@@ -3172,8 +3172,7 @@ components:
       in: header
       name: X-netmera-api-key
       description: |
-        Your Netmera REST API key, available in the Netmera Panel under
-        **Developers > API**. Use only the REST API key — not the JavaScript or mobile keys.
+        REST API key. Available in the Netmera Panel under Developers > API.
 
   schemas:
     ErrorResponse:
