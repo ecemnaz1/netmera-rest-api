@@ -1648,7 +1648,7 @@ paths:
                     type: integer
                     description: Identifier of the definition created for this send.
               example:
-                notificationKey: 16729
+                notificationKey: 97
           x-netmera-verified: '2026-09-06'
         '400':
           description: |
@@ -1919,7 +1919,7 @@ paths:
                     type: integer
                     description: Identifier assigned to the created geofence.
               example:
-                id: 3314
+                id: 1000
           x-netmera-verified: '2026-09-06'
 
   /rest/3.0/fireEvents:
