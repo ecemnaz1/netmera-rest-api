@@ -2791,6 +2791,50 @@ paths:
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
 
+  /rest/3.0/removeEmail:
+    post:
+      operationId: removeEmail
+      tags: [Email]
+      summary: removeEmail
+      description: |
+        Removes the email address of a user. Only the email field is cleared: the user, its external ID,
+        devices, profile attributes and email permission state are kept. A new address can be
+        set later with `updateEmail`.
+
+        The request is processed asynchronously. `200` means the request has been queued, and the
+        change is applied to the user within seconds. A request whose `extId` matches no user in the
+        application, or that targets a user whose email is already empty, also returns `200` and
+        changes nothing.
+
+        Sending an empty value to `updateEmail` does not remove the email address: the request returns `200` but the stored
+        address is kept. `unsetProfileAttributes` does not remove it either, since email is a system field rather than a
+        profile attribute. Use `removeEmail` to clear the address.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [extId]
+              properties:
+                extId:
+                  type: string
+                  description: External user ID of the user.
+            example:
+              extId: your_extId
+      responses:
+        '200':
+          description: |
+            The request was queued. Returns no response body.
+        '400':
+          description: |
+            `extId` is missing or `null`. No user is changed.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Please provide an external id.
+
   /rest/3.0/updateMsisdn:
     post:
       operationId: updateMsisdn
@@ -2819,6 +2863,49 @@ paths:
           description: |
             The MSISDN was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+
+  /rest/3.0/removeMsisdn:
+    post:
+      operationId: removeMsisdn
+      tags: [SMS]
+      summary: removeMsisdn
+      description: |
+        Removes the MSISDN of a user. Only the MSISDN field is cleared: the user, its external ID,
+        devices, profile attributes and SMS permission state are kept. A new number can be
+        set later with `updateMsisdn`.
+
+        The request is processed asynchronously. `200` means the request has been queued, and the
+        change is applied to the user within seconds. A request whose `extId` matches no user in the
+        application, or that targets a user whose MSISDN is already empty, also returns `200` and
+        changes nothing.
+
+        Sending an empty value to `updateMsisdn` does not remove the number; an empty value is stored instead.
+        Use `removeMsisdn` to clear the field.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [extId]
+              properties:
+                extId:
+                  type: string
+                  description: External user ID of the user.
+            example:
+              extId: your_extId
+      responses:
+        '200':
+          description: |
+            The request was queued. Returns no response body.
+        '400':
+          description: |
+            `extId` is missing or `null`. No user is changed.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Please provide an external id.
 
   /rest/3.0/enableWhatsApp:
     post:
@@ -2897,6 +2984,49 @@ paths:
           description: |
             The WhatsApp number was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+
+  /rest/3.0/removeWhatsApp:
+    post:
+      operationId: removeWhatsApp
+      tags: [WhatsApp]
+      summary: removeWhatsApp
+      description: |
+        Removes the WhatsApp number of a user. Only the WhatsApp number field is cleared: the user, its external ID,
+        devices, profile attributes and WhatsApp permission state are kept. A new number can be
+        set later with `updateWhatsApp`.
+
+        The request is processed asynchronously. `200` means the request has been queued, and the
+        change is applied to the user within seconds. A request whose `extId` matches no user in the
+        application, or that targets a user whose WhatsApp number is already empty, also returns `200` and
+        changes nothing.
+
+        Sending an empty value to `updateWhatsApp` does not remove the number; an empty value is stored instead.
+        Use `removeWhatsApp` to clear the field.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [extId]
+              properties:
+                extId:
+                  type: string
+                  description: External user ID of the user.
+            example:
+              extId: your_extId
+      responses:
+        '200':
+          description: |
+            The request was queued. Returns no response body.
+        '400':
+          description: |
+            `extId` is missing or `null`. No user is changed.
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: Please provide an external id.
 
   /rest/3.0/targeting/count:
     post:
