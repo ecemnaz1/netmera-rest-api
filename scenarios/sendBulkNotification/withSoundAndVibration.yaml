@@ -19,19 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Sounds must be pre-defined in the panel under Developers > Sounds, per platform.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               withSoundAndVibration:
-                description: Sounds must be pre-defined in the panel under Developers > Sounds, per platform.
                 summary: With sound and vibration
                 value:
                   message:

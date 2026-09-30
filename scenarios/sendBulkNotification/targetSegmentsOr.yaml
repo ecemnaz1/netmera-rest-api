@@ -19,19 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Equivalent to passing the segments as an array.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               targetSegmentsOr:
-                description: Equivalent to passing the segments as an array.
                 summary: Target multiple segments (explicit $or)
                 value:
                   message:

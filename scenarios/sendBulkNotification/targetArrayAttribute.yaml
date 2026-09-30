@@ -19,21 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Sent to users whose `arrayTest` attribute contains extSegment4 or extSegment5 AND
-        whose `kvkkTest` is true.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               targetArrayAttribute:
-                description: Sent to users whose `arrayTest` attribute contains extSegment4 or extSegment5
-                  AND whose `kvkkTest` is true.
                 summary: Target array-type profile attributes
                 value:
                   message:

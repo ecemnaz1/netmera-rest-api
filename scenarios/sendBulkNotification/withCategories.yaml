@@ -19,19 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Categories must be pre-defined in the panel under Settings > Message Categories.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               withCategories:
-                description: Categories must be pre-defined in the panel under Settings > Message Categories.
                 summary: With categories
                 value:
                   message:

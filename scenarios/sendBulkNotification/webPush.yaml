@@ -19,19 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'If `platforms` contains CHROME or FIREFOX, `iconUrl` must exist.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               webPush:
-                description: If `platforms` contains CHROME or FIREFOX, `iconUrl` must exist.
                 summary: Web bulk notification
                 value:
                   message:

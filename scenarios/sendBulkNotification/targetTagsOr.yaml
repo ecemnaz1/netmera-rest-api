@@ -19,26 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Equivalent to passing the tags as an array. Users with any of the given tags
-
-        receive the notification.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               targetTagsOr:
-                description: 'Equivalent to passing the tags as an array. Users with any of the given
-                  tags
-
-                  receive the notification.
-
-                  '
                 summary: Target multiple tags (explicit $or)
                 value:
                   message:

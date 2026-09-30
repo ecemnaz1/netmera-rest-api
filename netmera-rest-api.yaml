@@ -323,7 +323,6 @@ paths:
                     sendToAll: true
               customButton:
                 summary: Custom button (Android)
-                description: "Button sets must be created in the panel under Settings > Button Sets. Format is `$buttonSetName: $actionUrl`."
                 value:
                   message:
                     title: New Offer Alert
@@ -375,7 +374,6 @@ paths:
                     sendToAll: true
               androidLivePushUpdate:
                 summary: Android live push update
-                description: Send with the saved NotificationKey as `refID` to modify a notification already delivered.
                 value:
                   message:
                     title: Push Notification Title
@@ -410,7 +408,6 @@ paths:
                     sendToAll: true
               webPush:
                 summary: Web bulk notification
-                description: If `platforms` contains CHROME or FIREFOX, `iconUrl` must exist.
                 value:
                   message:
                     title: Important Update
@@ -449,7 +446,6 @@ paths:
                     tag: Sport
               targetMultipleTags:
                 summary: Target multiple tags (OR)
-                description: "Users with any of the given tags receive the notification. Equivalent to `{\"$or\": [...]}`."
                 value:
                   message:
                     title: Updates for You
@@ -459,9 +455,6 @@ paths:
                     tag: [Sport, Casual]
               targetTagsOr:
                 summary: Target multiple tags (explicit $or)
-                description: |
-                  Equivalent to passing the tags as an array. Users with any of the given tags
-                  receive the notification.
                 value:
                   message:
                     title: Personalized Updates
@@ -472,7 +465,6 @@ paths:
                       $or: [Sport, Casual]
               targetTagsAnd:
                 summary: Target multiple tags (AND)
-                description: Users with all of the given tags receive the notification.
                 value:
                   message:
                     title: Exclusive Sports & Casual Updates
@@ -483,7 +475,6 @@ paths:
                       $and: [Sport, Casual]
               targetTagsNot:
                 summary: Target multiple tags (NOT)
-                description: Users who do not have any of the given tags receive the notification.
                 value:
                   message:
                     title: General Updates
@@ -517,7 +508,6 @@ paths:
                     segment: frequent_users
               targetSegments:
                 summary: Target multiple segments (OR)
-                description: Users in any of the given segments receive the notification.
                 value:
                   message:
                     title: Special Announcement
@@ -527,7 +517,6 @@ paths:
                     segment: [frequent_users, churn]
               targetSegmentsOr:
                 summary: Target multiple segments (explicit $or)
-                description: Equivalent to passing the segments as an array.
                 value:
                   message:
                     title: Special Announcement
@@ -538,7 +527,6 @@ paths:
                       $or: [frequent_users, churn]
               targetSegmentsNot:
                 summary: Target multiple segments (NOT)
-                description: Users who are not in any of the given segments receive the notification.
                 value:
                   message:
                     title: Latest News
@@ -559,7 +547,6 @@ paths:
                       $and: [frequent_users, churn]
               targetProfileAttribute:
                 summary: Target profile attributes
-                description: The notification is sent to users who satisfy all listed attributes.
                 value:
                   message:
                     title: Special Offer
@@ -571,7 +558,6 @@ paths:
                       name: John
               targetArrayAttribute:
                 summary: Target array-type profile attributes
-                description: Sent to users whose `arrayTest` attribute contains extSegment4 or extSegment5 AND whose `kvkkTest` is true.
                 value:
                   message:
                     title: Push Notification Title
@@ -583,11 +569,6 @@ paths:
                       kvkkTest: true
               personalized:
                 summary: Personalized push
-                description: |
-                  Sent to users who have the profile attributes referenced as placeholders in
-                  `personalizedMessage`. A user with `name` = Susan and `surname` = Smith
-                  receives "Susan, Smith". Users missing any placeholder attribute receive the
-                  default `text`.
                 value:
                   message:
                     title: Special Offer
@@ -610,7 +591,6 @@ paths:
                       radius: 50
               withCategories:
                 summary: With categories
-                description: Categories must be pre-defined in the panel under Settings > Message Categories.
                 value:
                   message:
                     title: Special Announcement
@@ -621,7 +601,6 @@ paths:
                     sendToAll: true
               withSoundAndVibration:
                 summary: With sound and vibration
-                description: Sounds must be pre-defined in the panel under Developers > Sounds, per platform.
                 value:
                   message:
                     title: Special Announcement
@@ -802,38 +781,7 @@ paths:
       operationId: sendNotification
       tags: [Transactional Notifications]
       summary: Send transactional notification
-      description: |
-        Sends a pre-configured notification definition to individual users. The definition is
-        created either in the Netmera Panel or with `createNotificationDefinition`, and is
-        referenced by its `notificationKey`.
-
-        This endpoint also delivers email and SMS notifications when the referenced
-        notification key belongs to an email or SMS definition — target the user with
-        `target.email` or `target.extId` accordingly.
-
-        ### Limits and behavior
-
-        - A maximum of **1000 unique external IDs or device tokens** per request. Distribute
-          larger audiences across multiple requests.
-        - If a custom parameter in the request differs from the parameter configured in the
-          panel, the request value overwrites the panel value.
-        - The request body accepts either a single object or an array of objects. Use an array
-          to send different notifications or different parameters in one call.
-        - `lastActiveDevice: true` sends only to the user's last active device;
-          `false` sends to all devices.
-
-        ### Button renaming
-
-        In both `sendNotification` and `createNotificationDefinition`, the `buttonSet.buttonNames`
-        field renames buttons by mapping each old button name to a new one. If `buttonNames` is
-        omitted, notifications are sent with the existing button names. Using this feature on iOS
-        requires the Service Extension integration.
-
-        ### Deeplink placeholders
-
-        Placeholders such as `@{extId}` used inside a deeplink must resolve to real user data.
-        If a placeholder does not exist for a user, delivery to that user fails even when the
-        user matches the target.
+      description: Sends a pre-configured notification definition to individual users. The definition is referenced by its `notificationKey`.
       requestBody:
         required: true
         content:
@@ -1005,9 +953,6 @@ paths:
                     extId: "123123123"
               profileAttributeTarget:
                 summary: Target by profile attribute
-                description: |
-                  `pa` holds profile attribute targeting. `pb` is the attribute code — replace it
-                  with any code from Developers > Profile Attributes > Code.
                 value:
                   notificationKey: "1000"
                   target:
@@ -1015,9 +960,6 @@ paths:
                       pb: Smith
               profileAttributeMultiple:
                 summary: Target by multiple profile attribute values
-                description: |
-                  Values inside the same attribute are connected with OR, so this reaches users
-                  whose surname is Smith or Johnson.
                 value:
                   notificationKey: "1000"
                   target:
@@ -1102,15 +1044,7 @@ paths:
       operationId: createNotificationDefinition
       tags: [Transactional Notifications]
       summary: Create notification definition
-      description: |
-        Creates a transactional notification definition. The returned `notificationKey` is the
-        identifier used in later `sendNotification` calls, connecting each transactional message
-        to its predefined definition.
-
-        A definition can also be created through the Netmera Panel instead of this endpoint.
-
-        Notification grouping via `threadId` and button renaming via `buttonSet.buttonNames` are
-        both supported here as well as on `sendBulkNotification` / `sendNotification`.
+      description: Creates a transactional notification definition. The returned `notificationKey` is used in later `sendNotification` calls.
       requestBody:
         required: true
         content:

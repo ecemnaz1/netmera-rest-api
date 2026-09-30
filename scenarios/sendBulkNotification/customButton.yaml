@@ -19,21 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Button sets must be created in the panel under Settings > Button Sets. Format is `$buttonSetName:
-        $actionUrl`.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               customButton:
-                description: 'Button sets must be created in the panel under Settings > Button Sets. Format
-                  is `$buttonSetName: $actionUrl`.'
                 summary: Custom button (Android)
                 value:
                   message:

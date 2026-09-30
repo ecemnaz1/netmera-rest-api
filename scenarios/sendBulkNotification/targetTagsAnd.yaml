@@ -19,19 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Users with all of the given tags receive the notification.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               targetTagsAnd:
-                description: Users with all of the given tags receive the notification.
                 summary: Target multiple tags (AND)
                 value:
                   message:

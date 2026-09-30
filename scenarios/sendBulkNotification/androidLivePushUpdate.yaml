@@ -19,20 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Send with the saved NotificationKey as `refID` to modify a notification already delivered.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               androidLivePushUpdate:
-                description: Send with the saved NotificationKey as `refID` to modify a notification already
-                  delivered.
                 summary: Android live push update
                 value:
                   message:

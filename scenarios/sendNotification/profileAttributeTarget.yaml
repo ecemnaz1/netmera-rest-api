@@ -17,36 +17,14 @@ tags:
 paths:
   /rest/3.0/sendNotification:
     post:
-      description: "`pa` holds profile attribute targeting. `pb` is the attribute code — replace it\n\
-        with any code from Developers > Profile Attributes > Code.\n\nSends a pre-configured notification\
-        \ definition to individual users. The definition is\ncreated either in the Netmera Panel or with\
-        \ `createNotificationDefinition`, and is\nreferenced by its `notificationKey`.\n\nThis endpoint\
-        \ also delivers email and SMS notifications when the referenced\nnotification key belongs to an\
-        \ email or SMS definition — target the user with\n`target.email` or `target.extId` accordingly.\n\
-        \n### Limits and behavior\n\n- A maximum of **1000 unique external IDs or device tokens** per\
-        \ request. Distribute\n  larger audiences across multiple requests.\n- If a custom parameter in\
-        \ the request differs from the parameter configured in the\n  panel, the request value overwrites\
-        \ the panel value.\n- The request body accepts either a single object or an array of objects.\
-        \ Use an array\n  to send different notifications or different parameters in one call.\n- `lastActiveDevice:\
-        \ true` sends only to the user's last active device;\n  `false` sends to all devices.\n\n### Button\
-        \ renaming\n\nIn both `sendNotification` and `createNotificationDefinition`, the `buttonSet.buttonNames`\n\
-        field renames buttons by mapping each old button name to a new one. If `buttonNames` is\nomitted,\
-        \ notifications are sent with the existing button names. Using this feature on iOS\nrequires the\
-        \ Service Extension integration.\n\n### Deeplink placeholders\n\nPlaceholders such as `@{extId}`\
-        \ used inside a deeplink must resolve to real user data.\nIf a placeholder does not exist for\
-        \ a user, delivery to that user fails even when the\nuser matches the target.\n"
+      description: Sends a pre-configured notification definition to individual users. The definition
+        is referenced by its `notificationKey`.
       operationId: sendNotification
       requestBody:
         content:
           application/json:
             examples:
               profileAttributeTarget:
-                description: '`pa` holds profile attribute targeting. `pb` is the attribute code — replace
-                  it
-
-                  with any code from Developers > Profile Attributes > Code.
-
-                  '
                 summary: Target by profile attribute
                 value:
                   notificationKey: '1000'

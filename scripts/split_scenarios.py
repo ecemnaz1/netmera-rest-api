@@ -59,12 +59,6 @@ def build(spec, operation_id, example_key):
     examples = content["examples"]
     content["examples"] = {example_key: examples[example_key]}
 
-    # A block does not show the description of an example, so the scenario note is
-    # placed at the top of the operation description where it is always visible.
-    note = (examples[example_key].get("description") or "").strip()
-    if note:
-        operation["description"] = f"{note}\n\n{(operation.get('description') or '').strip()}\n"
-
     components = spec["components"]
     needed = set()
     collect_refs(operation, components, needed)

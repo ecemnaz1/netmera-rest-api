@@ -19,21 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Users with any of the given tags receive the notification. Equivalent to `{"$or":
-        [...]}`.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               targetMultipleTags:
-                description: 'Users with any of the given tags receive the notification. Equivalent to
-                  `{"$or": [...]}`.'
                 summary: Target multiple tags (OR)
                 value:
                   message:

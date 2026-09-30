@@ -17,22 +17,8 @@ tags:
 paths:
   /rest/3.0/createNotificationDefinition:
     post:
-      description: 'Creates a transactional notification definition. The returned `notificationKey` is
-        the
-
-        identifier used in later `sendNotification` calls, connecting each transactional message
-
-        to its predefined definition.
-
-
-        A definition can also be created through the Netmera Panel instead of this endpoint.
-
-
-        Notification grouping via `threadId` and button renaming via `buttonSet.buttonNames` are
-
-        both supported here as well as on `sendBulkNotification` / `sendNotification`.
-
-        '
+      description: Creates a transactional notification definition. The returned `notificationKey` is
+        used in later `sendNotification` calls.
       operationId: createNotificationDefinition
       requestBody:
         content:

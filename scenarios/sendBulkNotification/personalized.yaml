@@ -19,34 +19,13 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: 'Sent to users who have the profile attributes referenced as placeholders in
-
-        `personalizedMessage`. A user with `name` = Susan and `surname` = Smith
-
-        receives "Susan, Smith". Users missing any placeholder attribute receive the
-
-        default `text`.
-
-
-        Sends a push notification to a target audience.
-
-        '
+      description: Sends a push notification to a target audience.
       operationId: sendBulkNotification
       requestBody:
         content:
           application/json:
             examples:
               personalized:
-                description: 'Sent to users who have the profile attributes referenced as placeholders
-                  in
-
-                  `personalizedMessage`. A user with `name` = Susan and `surname` = Smith
-
-                  receives "Susan, Smith". Users missing any placeholder attribute receive the
-
-                  default `text`.
-
-                  '
                 summary: Personalized push
                 value:
                   message:
