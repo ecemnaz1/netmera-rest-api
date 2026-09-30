@@ -3057,6 +3057,31 @@ paths:
         preferences, interests or affinity counts, and content, product, category or brand
         popularity.
 
+        ### Use cases
+
+        **Entity popularity display.** Show how many users have favorited or selected a specific
+        entity on a detail page, such as an athlete, team or sports entity; a product or brand; a
+        content item (article, video, creator); or a category or interest. Example UI copy:
+        "Favorited by X users".
+
+        **Interest and preference insights.** Understand how many users have selected a specific
+        value in their profile, such as a favorite team, brand or category; a preferred content
+        type; an interest or hobby; or a subscription preference. This information can be used
+        for analytics, segmentation previews or in-app messaging.
+
+        ### Data model
+
+        The API operates on User Profile Attributes configured in Netmera. Profile attributes
+        may store values as single values or arrays, depending on the attribute definition.
+        Example attributes:
+
+        | Attribute name | Type | Description |
+        | --- | --- | --- |
+        | `favoriteFootballPlayers` | String array | IDs of favorited players |
+        | `soccerFavoriteTeam` | String or string array | Favorited team ID or IDs |
+        | `favoriteBrands` | String array | IDs of favorited brands |
+        | `userInterests` | String array | Interest or category identifiers |
+
         ### Targeting
 
         The `target` object follows Netmera's standard targeting format. Profile attributes can be
@@ -3146,6 +3171,98 @@ paths:
                 count: 184523
         '400':
           description: Invalid targeting query.
+
+  /rest/3.0/targeting/count-batch:
+    post:
+      operationId: targetingCountBatch
+      tags: [Targeting]
+      summary: Count users per attribute value
+      description: |
+        Returns the distinct user count for every value of one profile or installation
+        attribute in a single request. Use it when you need the count for many values of the
+        same attribute at once, for example one popularity figure per player, team or brand,
+        instead of sending one `targeting/count` request per value.
+
+        `groupBy` is required and must contain either `profile` or `installation`; the request
+        is rejected with `400` otherwise. Counts are served from the same aggregated data as
+        `targeting/count`, so the data freshness and caching notes of that endpoint apply.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [groupBy]
+              properties:
+                groupBy:
+                  type: object
+                  description: |
+                    Names the attribute to group by. Set exactly one of `profile` or
+                    `installation`.
+                  properties:
+                    profile:
+                      type: string
+                      description: A User Profile Attribute code.
+                    installation:
+                      type: string
+                      description: A device attribute such as `platform`.
+                    buckets:
+                      type: array
+                      description: |
+                        For numeric attributes: an array of `[min, max]` pairs. Counts are
+                        returned per bucket instead of per individual value.
+                      items:
+                        type: array
+                        items:
+                          type: number
+                values:
+                  type: array
+                  description: |
+                    Restricts the result to these attribute values. When omitted, every value of
+                    the attribute is returned.
+                  items:
+                    type: string
+            examples:
+              profileValues:
+                summary: Breakdown by profile attribute values
+                value:
+                  groupBy:
+                    profile: favoriteFootballPlayers
+                  values: ["352481", "15", "23"]
+              installationAttribute:
+                summary: Breakdown by installation attribute
+                value:
+                  groupBy:
+                    installation: platform
+              numericBuckets:
+                summary: Numeric buckets
+                value:
+                  groupBy:
+                    profile: age
+                    buckets: [[18, 24], [25, 34], [35, 44]]
+      responses:
+        '200':
+          description: The distinct user count per attribute value.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  counts:
+                    type: object
+                    description: |
+                      Distinct user count per attribute value, or per bucket when `buckets` is
+                      set.
+                    additionalProperties:
+                      type: integer
+              example:
+                counts:
+                  "352481": 184523
+                  "15": 9210
+                  "23": 4487
+        '400':
+          description: |
+            `groupBy` is missing or contains neither `profile` nor `installation`.
 
   /rest/3.0/inbox/getAllInbox:
     post:
