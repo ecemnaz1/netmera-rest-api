@@ -179,21 +179,25 @@ tags:
   - name: Events
     description: Fire custom events associated with a specific user.
   - name: Users
-    description: Push permission management and permanent user deletion.
+    description: User registration, deletion, push permission management and user counts.
   - name: Tags
     description: Add and remove tags on users.
   - name: Categories
-    description: Read and write category-based opt-in preferences.
+    description: List message categories and read and write category-based opt-in preferences.
   - name: Profile Attributes
     description: Read, set, unset, append to and delete user profile attributes.
   - name: Devices
-    description: Retrieve a user's devices and page through all device tokens.
+    description: Retrieve a user's devices, page through all device tokens and register test devices.
   - name: Segments
     description: List segments and the users inside a segment.
   - name: Targeting
     description: Count the unique users matching a targeting query.
   - name: Geofence
-    description: Create geofences via the REST API.
+    description: Create and remove geofences via the REST API.
+  - name: Promotions
+    description: Assign promotion codes to users.
+  - name: Application Data
+    description: Read-only definitions of the profile attributes and events configured for the application.
   - name: Inbox
     description: Fetch, display and manage push notifications stored on the server.
 
@@ -496,6 +500,19 @@ paths:
                     text: Check out the latest updates tailored for your interests!
                   target:
                     tag: [Sport, Casual]
+              targetTagsOr:
+                summary: Target multiple tags (explicit $or)
+                description: |
+                  Equivalent to passing the tags as an array. Users with any of the given tags
+                  receive the notification.
+                value:
+                  message:
+                    title: Personalized Updates
+                    platforms: [IOS, ANDROID]
+                    text: Stay tuned for personalized updates tailored just for you!
+                  target:
+                    tag:
+                      $or: [Sport, Casual]
               targetTagsAnd:
                 summary: Target multiple tags (AND)
                 description: Users with all of the given tags receive the notification.
@@ -541,6 +558,38 @@ paths:
                     text: As a valued frequent user, enjoy an exclusive offer just for you!
                   target:
                     segment: frequent_users
+              targetSegments:
+                summary: Target multiple segments (OR)
+                description: Users in any of the given segments receive the notification.
+                value:
+                  message:
+                    title: Special Announcement
+                    platforms: [IOS, ANDROID]
+                    text: Exciting news for you! Check it out now.
+                  target:
+                    segment: [frequent_users, churn]
+              targetSegmentsOr:
+                summary: Target multiple segments (explicit $or)
+                description: Equivalent to passing the segments as an array.
+                value:
+                  message:
+                    title: Special Announcement
+                    platforms: [IOS, ANDROID]
+                    text: Exciting news for frequent you!
+                  target:
+                    segment:
+                      $or: [frequent_users, churn]
+              targetSegmentsNot:
+                summary: Target multiple segments (NOT)
+                description: Users who are not in any of the given segments receive the notification.
+                value:
+                  message:
+                    title: Latest News
+                    platforms: [IOS, ANDROID]
+                    text: Stay updated with the latest news and announcements.
+                  target:
+                    segment:
+                      $not: [frequent_users, churn]
               targetSegmentsAnd:
                 summary: Target multiple segments (AND)
                 value:
@@ -2137,7 +2186,13 @@ paths:
       operationId: setCategoryPreferences
       tags: [Categories]
       summary: Set category preferences
-      description: Enables or disables category-specific opt-in preferences for a user.
+      description: |
+        Enables or disables category-specific opt-in preferences for a user.
+
+        A user's opt-in preference is stored per category and channel. Send `channel` to update
+        a single category and channel pair; omit it to apply the change to every channel of the
+        category. The `channel` field is optional: omitting it behaves exactly as it did before
+        channel-based preferences were introduced.
       requestBody:
         required: true
         content:
@@ -2153,17 +2208,47 @@ paths:
                     description: External user ID.
                   category:
                     type: string
-                    description: Message category name.
+                    description: |
+                      Message category name. An entry naming a category that does not exist is
+                      skipped.
                   enable:
                     type: boolean
                     description: True to opt-in, false to opt-out.
-            example:
-              - extId: id1
-                category: Shopping
-                enable: true
-              - extId: id1
-                category: Promotion
-                enable: false
+                  channel:
+                    type: string
+                    description: |
+                      Applies the change only to this category and channel pair. When omitted,
+                      the change is applied to every channel of the category.
+
+                      Channel values are `MOBILE`, `SMS`, `EMAIL`, `WHATS_APP`, `IN_APP` and
+                      `WEB`, case-insensitive. Categories created before channel selection was
+                      introduced carry no channel information and are treated as valid on all
+                      channels. An entry with an unrecognized `channel` value is skipped and
+                      logged; the remaining entries in the request are still processed, so a
+                      typo leaves that preference unchanged.
+            examples:
+              singleChannel:
+                summary: Update one channel and all channels
+                description: |
+                  The first entry updates only the `EMAIL` channel of the category. The second
+                  entry has no channel and applies to every channel of the category.
+                value:
+                  - extId: id1
+                    category: Shopping
+                    enable: true
+                    channel: EMAIL
+                  - extId: id1
+                    category: Promotion
+                    enable: false
+              allChannels:
+                summary: All channels
+                value:
+                  - extId: id1
+                    category: Shopping
+                    enable: true
+                  - extId: id1
+                    category: Promotion
+                    enable: false
       responses:
         '200':
           description: |
@@ -2176,7 +2261,11 @@ paths:
       tags: [Categories]
       summary: Get category preferences
       description: |
-        Retrieves category-based opt-in preferences for a specific user.
+        Retrieves category-based opt-in preferences for a specific user, with a per-channel
+        breakdown.
+
+        The `categoryIds` and `channels` parameters are optional: omit them and the call
+        behaves exactly as it did before channel-based preferences were introduced.
 
         The Netmera Developer Guide documents `externalId` and `pushPermitted` as this
         endpoint's parameters and shows them being passed as a JSON body on a GET request.
@@ -2196,6 +2285,37 @@ paths:
           schema:
             type: boolean
           example: false
+        - name: categoryIds
+          in: query
+          required: false
+          description: |
+            Returns only these category IDs. When omitted, all categories are returned. Accepts
+            repeated parameters (`?categoryIds=56&categoryIds=57`) or a comma-separated value
+            (`?categoryIds=56,57`). Repeated values are collapsed automatically.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: integer
+          example: [56]
+        - name: channels
+          in: query
+          required: false
+          description: |
+            Returns the permission state of these channels only. When omitted, every channel of
+            the category is returned. Categories that support none of the requested channels are
+            left out of the response. Channel values are `MOBILE`, `SMS`, `EMAIL`, `WHATS_APP`,
+            `IN_APP` and `WEB`, case-insensitive. Accepts repeated parameters
+            (`?channels=MOBILE&channels=EMAIL`) or a comma-separated value
+            (`?channels=MOBILE,EMAIL`). Repeated values are collapsed automatically.
+          style: form
+          explode: true
+          schema:
+            type: array
+            items:
+              type: string
+          example: [MOBILE, EMAIL]
       responses:
         '200':
           description: The user's category preferences.
@@ -2207,7 +2327,7 @@ paths:
                 categoryPreferences:
                   Promotions: true
                   Discounts: true
-                  "Haftalık Bülten": true
+                  Offers: true
                   Newsletter: true
           x-netmera-verified: '2026-09-06'
 
@@ -3224,6 +3344,409 @@ paths:
           description: |
             `groupBy` is missing or contains neither `profile` nor `installation`.
 
+  /rest/3.0/registerUsers:
+    post:
+      operationId: registerUsers
+      tags: [Users]
+      summary: Register users
+      description: |
+        Registers users and their devices from your backend, or updates existing ones. Each
+        entry in the array is one registration: a device identified by its push token and
+        platform, or an SMS-only user identified by MSISDN. Optional tags and profile attributes
+        are applied to the user in the same request.
+
+        Registrations are processed asynchronously. An entry that fails validation is skipped
+        without affecting the others; the request is rejected only when every entry is invalid
+        or when no registration is sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  extId:
+                    type: string
+                    description: |
+                      External user ID in your system. Recommended; needed to target the user in
+                      other endpoints.
+                  platform:
+                    type: string
+                    description: |
+                      Platform of the device, for example `IOS` or `ANDROID`. Required unless
+                      `msisdn` is provided; a registration with only `msisdn` is stored as an
+                      SMS user.
+                  deviceToken:
+                    type: string
+                    description: Push token of the device.
+                  email:
+                    type: string
+                    description: Email address of the user.
+                  msisdn:
+                    type: string
+                    description: |
+                      Phone number of the user, including the country code. Required unless
+                      `platform` is provided.
+                  tags:
+                    type: array
+                    description: Tag names to add to the user.
+                    items:
+                      type: string
+                  profile:
+                    type: object
+                    description: |
+                      Key-value object of profile attributes to set. Keys must match attributes
+                      defined in the panel.
+                    additionalProperties: true
+            example:
+              - extId: id_in_my_system_1
+                platform: IOS
+                deviceToken: my_device_token
+                email: example@netmera.com
+                msisdn: "+90xxxxxxxx"
+                tags: [Sport]
+                profile:
+                  name: John
+                  age: 34
+      responses:
+        '200':
+          description: The registrations were accepted for processing.
+        '400':
+          description: Every entry is invalid, or no registration was sent.
+
+  /rest/3.0/deleteUsers:
+    post:
+      operationId: deleteUsers
+      tags: [Users]
+      summary: Delete users
+      description: |
+        Deletes the given users from your application. The users stop being tracked and are no
+        longer targeted by campaigns. This is the standard deletion; to erase all data of the
+        users irreversibly use `deleteUsersPermanently`.
+
+        `deleteUsers` and `deleteUsersPermanently` take the same request body but differ in
+        effect: `deleteUsers` removes the users from your application, whereas
+        `deleteUsersPermanently` additionally erases every piece of data stored about them and
+        cannot be undone. If permanent deletion has not been activated for your application,
+        `deleteUsersPermanently` behaves like `deleteUsers`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [extIds]
+              properties:
+                extIds:
+                  type: array
+                  description: External user IDs to delete.
+                  items:
+                    type: string
+            example:
+              extIds: [id1]
+      responses:
+        '200':
+          description: The deletion request was accepted.
+
+  /rest/3.0/addTesters:
+    post:
+      operationId: addTesters
+      tags: [Devices]
+      summary: Add test devices
+      description: |
+        Registers the devices of the given users as test devices, so that they can receive test
+        messages sent from the panel. Identify each user by `extId`; all of that user's devices
+        are added. If only `email` is sent, the user is looked up by email address instead.
+
+        Each entry must contain `extId` or `email`. Entries that match no existing user are
+        ignored.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                anyOf:
+                  - required: [extId]
+                  - required: [email]
+                properties:
+                  extId:
+                    type: string
+                    description: External user ID (preferred).
+                  email:
+                    type: string
+                    description: Used to find the user when `extId` is not sent.
+            example:
+              - extId: id_in_my_system_1
+                email: example@netmera.com
+      responses:
+        '200':
+          description: The request was accepted.
+
+  /rest/3.0/count-user:
+    get:
+      operationId: countUsers
+      tags: [Users]
+      summary: Count users with push permission
+      description: |
+        Returns the number of users in your application that currently have push permission.
+        No parameters are required.
+      responses:
+        '200':
+          description: The user count.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    description: Number of users that currently have push permission.
+              example:
+                count: 184523
+
+  /rest/3.0/promotion/add:
+    post:
+      operationId: addPromotionCodes
+      tags: [Promotions]
+      summary: Assign promotion codes
+      description: |
+        Assigns promotion codes to users. All codes in one request belong to the same promotion,
+        identified by `name`; the promotion is created automatically the first time the name is
+        used. Assigned codes can then be placed into messages sent to that user.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, codes]
+              properties:
+                name:
+                  type: string
+                  description: |
+                    Name of the promotion. Codes sent with the same name are grouped under the
+                    same promotion.
+                expiryDate:
+                  type: integer
+                  format: int64
+                  description: |
+                    Expiry date of the promotion as an epoch timestamp in milliseconds. Used when
+                    the promotion is first created.
+                codes:
+                  type: array
+                  description: One entry per user.
+                  items:
+                    type: object
+                    required: [extId, code]
+                    properties:
+                      extId:
+                        type: string
+                        description: External user ID.
+                      code:
+                        type: string
+                        description: Promotion code assigned to this user.
+            example:
+              name: SummerSale
+              expiryDate: 1767225600000
+              codes:
+                - extId: id1
+                  code: SUMMER-1A2B
+                - extId: id2
+                  code: SUMMER-3C4D
+      responses:
+        '200':
+          description: The codes were accepted.
+
+  /rest/3.0/app/profile-attributes:
+    get:
+      operationId: getProfileAttributeDefinitions
+      tags: [Application Data]
+      summary: List profile attribute definitions
+      description: |
+        Lists the profile attributes defined for your application. `standardProfileAttributes`
+        contains the built-in attributes that are in use; `customProfileAttributes` contains the
+        attributes you created in the panel.
+
+        Fields that have no value are omitted from the response.
+      responses:
+        '200':
+          description: The profile attribute definitions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  standardProfileAttributes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AttributeDefinition'
+                  customProfileAttributes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AttributeDefinition'
+              example:
+                standardProfileAttributes:
+                  - code: email
+                    dataType: STRING
+                    name: email
+                    label: Email
+                    locked: true
+                    array: false
+                    privateInfo: true
+                    mandatory: false
+                    recommRequired: false
+                    order: 0
+                    calculated: false
+                customProfileAttributes:
+                  - code: favoriteTeam
+                    dataType: STRING
+                    name: favoriteTeam
+                    description: The team the user follows
+                    label: Favorite Team
+                    locked: false
+                    array: false
+                    privateInfo: false
+                    mandatory: false
+                    recommRequired: false
+                    createDate: 1767225600000
+                    updateDate: 1767225600000
+                    order: 3
+                    calculated: false
+
+  /rest/3.0/app/events:
+    get:
+      operationId: getEventDefinitions
+      tags: [Application Data]
+      summary: List event definitions
+      description: |
+        Lists the event definitions of your application. `standardEvents` contains the built-in
+        events that are exposed to your app; `customEvents` contains the events you defined in
+        the panel. Each definition includes its own attributes and the attributes inherited from
+        its base event.
+
+        Fields that have no value are omitted from the response.
+      responses:
+        '200':
+          description: The event definitions.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  standardEvents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventDefinition'
+                  customEvents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EventDefinition'
+              example:
+                standardEvents:
+                  - code: n:vw
+                    eventName: ScreenViewEvent
+                    label: Screen View
+                    standardEvent: true
+                    attributeDefinitions:
+                      - code: ep
+                        dataType: STRING
+                        name: pageName
+                        label: Page Name
+                        locked: true
+                        array: false
+                        privateInfo: false
+                        mandatory: false
+                        recommRequired: false
+                        order: 0
+                        calculated: false
+                    inheritedAttributes: []
+                customEvents:
+                  - code: ShareEvent
+                    eventName: ShareEvent
+                    label: Share
+                    eventDescription: User shared an item
+                    standardEvent: false
+                    attributeDefinitions:
+                      - code: itemId
+                        dataType: STRING
+                        name: itemId
+                        label: Item Id
+                        locked: false
+                        array: false
+                        privateInfo: false
+                        mandatory: true
+                        recommRequired: false
+                        order: 0
+                        calculated: false
+                    inheritedAttributes: []
+
+  /rest/3.0/geofence/remove:
+    post:
+      operationId: removeGeofence
+      tags: [Geofence]
+      summary: Remove geofence
+      description: |
+        Deletes a geofence that was created earlier. Pass the `id` returned by `geofence/add`
+        as a query parameter.
+
+        The request succeeds even if no geofence with the given `id` exists; nothing is removed
+        in that case.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: |
+            Identifier of the geofence to remove, as returned in the `id` field of the
+            `geofence/add` response.
+          schema:
+            type: integer
+          example: 123
+      responses:
+        '200':
+          description: The request succeeded.
+          content:
+            application/json:
+              schema:
+                type: boolean
+              example: true
+
+  /rest/3.0/getPushCategories:
+    get:
+      operationId: getPushCategories
+      tags: [Categories]
+      summary: List push categories
+      description: |
+        Lists the message categories defined for your application under Settings > Message
+        Categories in the panel. Use the returned names or IDs in the `categories` field of
+        `sendBulkNotification` and `createNotificationDefinition`, or in
+        `setCategoryPreferences`.
+      responses:
+        '200':
+          description: The message categories.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  categories:
+                    type: array
+                    description: |
+                      One object per category. Each object has a single entry whose key is the
+                      category ID and whose value is the category name.
+                    items:
+                      type: object
+                      additionalProperties:
+                        type: string
+              example:
+                categories:
+                  - "1": announcements
+                  - "2": promotions
+
   /rest/3.0/inbox/getAllInbox:
     post:
       operationId: getAllInbox
@@ -3423,9 +3946,21 @@ components:
       properties:
         categoryPreferences:
           type: object
-          description: Map of category name to opt-in state.
+          description: |
+            Map of category name to opt-in state. Unchanged field, kept for backward
+            compatibility: `true` when the user is permitted on any of the category's own
+            channels. The `channels` filter does not affect this value, so existing
+            integrations read the same result they read before.
           additionalProperties:
             type: boolean
+        categoryChannelPreferences:
+          type: object
+          description: |
+            Per-channel permission state, keyed by category name and then by channel.
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: boolean
 
     Platform:
       type: string
@@ -4409,4 +4944,104 @@ components:
           type: array
           description: Labels.
           items: {}
+      additionalProperties: true
+
+    AttributeDefinition:
+      type: object
+      description: |
+        Definition of a profile or event attribute. Fields that have no value are omitted.
+      properties:
+        code:
+          type: string
+          description: |
+            Attribute code. Use it as the key in `profile` objects of the profile attribute
+            endpoints.
+        dataType:
+          type: string
+          description: |
+            Value type, for example `STRING`, `INT`, `LONG`, `DOUBLE`, `BOOLEAN`, `DATE` or
+            `TIME_STAMP`.
+        name:
+          type: string
+          description: Display name as defined in the panel.
+        label:
+          type: string
+          description: Display label as defined in the panel.
+        description:
+          type: string
+          description: Description as defined in the panel.
+        locked:
+          type: boolean
+          description: "`true` for built-in attributes that cannot be edited."
+        array:
+          type: boolean
+          description: |
+            `true` when the attribute holds a list of values (see `pushProfileAttributes` and
+            `pullProfileAttributes`).
+        privateInfo:
+          type: boolean
+          description: "`true` when the attribute is marked as private information."
+        mandatory:
+          type: boolean
+          description: Whether the attribute is marked mandatory.
+        recommRequired:
+          type: boolean
+        calculated:
+          type: boolean
+        order:
+          type: integer
+        options:
+          type: array
+          description: Allowed values for attributes that have a fixed option list.
+          items: {}
+        unit:
+          type: string
+          description: Unit of measurement, when defined.
+        createDate:
+          type: integer
+          format: int64
+          description: Epoch timestamp in milliseconds.
+        updateDate:
+          type: integer
+          format: int64
+          description: Epoch timestamp in milliseconds.
+      additionalProperties: true
+
+    EventDefinition:
+      type: object
+      description: |
+        Definition of a standard or custom event. Fields that have no value are omitted.
+      properties:
+        code:
+          type: string
+          description: Event code used when firing the event through `fireEvents`.
+        eventName:
+          type: string
+          description: Display name as defined in the panel.
+        label:
+          type: string
+          description: Display label as defined in the panel.
+        eventDescription:
+          type: string
+          description: Description as defined in the panel.
+        baseEventCode:
+          type: string
+          description: Code of the base event this event extends, when it has one.
+        standardEvent:
+          type: boolean
+          description: "`true` for built-in events, `false` for custom events."
+        appCategoryId:
+          description: Application category the built-in event belongs to, when applicable.
+        attributeDefinitions:
+          type: array
+          description: |
+            Attributes defined directly on this event. Each entry has the same shape as a
+            profile attribute definition.
+          items:
+            $ref: '#/components/schemas/AttributeDefinition'
+        inheritedAttributes:
+          type: array
+          description: Attributes inherited from the base event chain.
+          items:
+            $ref: '#/components/schemas/AttributeDefinition'
       additionalProperties: true
