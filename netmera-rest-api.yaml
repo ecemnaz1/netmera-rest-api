@@ -1971,6 +1971,10 @@ paths:
                     grandTotal: 35.0
               aiQuerySubmitted:
                 summary: Conversational AI — query submitted
+                description: |
+                  Each time a tracked user action occurs inside the tool handler of a conversational
+                  AI app, the app backend sends a structured event to Netmera. Events originate from
+                  the app server, not from the AI platform directly.
                 value:
                   - extId: user_98765
                     name: AIQuerySubmitted
@@ -1979,6 +1983,9 @@ paths:
                     category: travel_planning
               aiConversionCompleted:
                 summary: Conversational AI — conversion completed
+                description: |
+                  Sent from the app server when the user completes a conversion. `sourceEvent`
+                  references the originating event so the conversion can be attributed to it.
                 value:
                   - extId: user_98765
                     name: AIConversionCompleted
@@ -2284,6 +2291,14 @@ paths:
                       name: John
               registerUser:
                 summary: Identify and register a user
+                description: |
+                  Netmera requires a user identity to attach events to a profile. At the start of
+                  each session, the backend must either match the user to an existing Netmera
+                  profile or create a new one. Identifying the user by external ID (`extId`) is
+                  recommended.
+
+                  If the user is anonymous, generate a temporary session ID and merge it with a
+                  known identity after authentication.
                 value:
                   - extId: user_98765
                     profile:
