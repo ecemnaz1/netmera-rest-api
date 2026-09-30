@@ -16,6 +16,21 @@ regenerates the reference whenever it changes.
 Never upload the file to GitBook by hand. The published spec is bound to this URL,
 and a manual upload would be overwritten by the next push.
 
+## Scenario files
+
+GitBook opens an OpenAPI block with the first request example of the operation and
+cannot choose another one. Each scenario of `sendBulkNotification`, `sendNotification`
+and `createNotificationDefinition` has its own guide page, so `scenarios/` holds one
+small spec per request example: the full operation with only that example kept. Each
+file is registered in GitBook as its own spec (slug `scn-<operation>-<example>`, in
+lowercase) and bound to one page.
+
+The files are derived from `netmera-rest-api.yaml`. Never edit them by hand. After any
+change to the main spec, run `python3 scripts/split_scenarios.py` and commit the result;
+CI fails when the files are stale. If an example has a `description`, the script places
+it at the top of the operation description, because a block does not show example
+descriptions.
+
 ## Setup
 
 No secrets or repository variables are needed. CI only validates the spec; it does not
