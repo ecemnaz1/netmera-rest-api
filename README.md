@@ -70,10 +70,16 @@ came back.
 so. No response schema is written for an endpoint whose response has not been seen.
 No field is marked required unless something says it is.
 
-**Errors are documented where they are known, not generically.** Operations do not
-carry a boilerplate set of 400/401/403/500 responses. An error appears on an
-operation when that specific failure has been observed or is documented for that
-endpoint. The full Netmera error code table lives once, in `info.description`.
+**Errors: generic ones point at the table, specific ones are recorded where seen.** Every
+operation references three shared responses (`BadRequest`, `Forbidden`,
+`InternalServerError` under `components/responses`). They carry no body example of their
+own beyond the verified `ErrorResponse` example and only cite what the error table in
+`info.description` already says, for example that an invalid API key (`2010`) maps to HTTP
+403. They do not claim that a given endpoint returns a particular code. An error that is
+specific to one endpoint appears on that operation only when it has been observed or is
+documented for that endpoint. 401 and 404 are not added generically: the table maps no
+REST API error to 404, and its only 401 entry (`5007`, "Please login") is not tied to API
+key calls. The full error code table lives once, in `info.description`.
 
 **`x-netmera-verified: <date>`** marks a response confirmed against the live API.
 It is invisible to readers and exists so a regeneration from the guide cannot
@@ -95,9 +101,25 @@ These are defects in the source documentation, recorded here so they are not
   `{code, error}` envelope, so two error shapes exist.
 - `getCategoryPreferences` is documented in the guide with a JSON body on a `GET`;
   it is modelled here with query parameters.
+- The guide marks `target` as required for bulk notifications, but its carousel and slider
+  examples omit it. The guide marks `title`, `message` and `platforms` as required for
+  notification definitions, but its slider example has no top-level `title` or `platforms`.
+  The spec therefore does not mark these fields required at the top level; it keeps what the
+  guide says in the operation pages instead.
+- `sendEmailAndSms` has no field the guide marks as required, so the request schema has
+  no `required` list. `smsIysMessageType` is documented above as conditionally required.
 
 ## Still unverified
 
 Responses for `sendPushApproval`, `sendEmailWithAttachment`, `sendBulkEmail`,
 `deleteProfileAttributes` and `deleteProfileAttributeValue` have not been captured.
 They carry no response schema rather than a guessed one.
+
+## Open questions for Netmera engineering
+
+These cannot be answered from the guide or the spec and are left undocumented rather than
+guessed: rate limits, request size and timeout limits, field length limits, what the REST
+API key is authorized to do, which endpoints return 404, differences between test and
+production environments, side effects of removing a channel on segment membership and
+message category permissions, and the responses of the five operations listed above plus
+`registerUsers`, `deleteUsers`, `addTesters` and `addPromotionCodes`.

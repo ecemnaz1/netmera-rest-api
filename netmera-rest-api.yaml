@@ -775,6 +775,12 @@ paths:
                       - type: integer
                       - type: string
                 additionalProperties: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendNotification:
     post:
@@ -1038,6 +1044,10 @@ paths:
                 code: 2004
                 error: Field 'notificationKey' should be a text
           x-netmera-verified: '2026-09-06'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/createNotificationDefinition:
     post:
@@ -1271,6 +1281,12 @@ paths:
               example:
                 notificationKey: 96
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushStats:
     get:
@@ -1373,6 +1389,12 @@ paths:
                         startDate: 1504790402907
                         endDate: 1504790402909
                         notificationKey: 748
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushResult:
     get:
@@ -1475,13 +1497,21 @@ paths:
                     timeStamp: 1557819194426
                     msgTitle: Awesome Title
                     msgText: How is it going, Jon?
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendPushApproval:
     post:
       operationId: sendPushApproval
       tags: [Push Approval]
       summary: Send push approval
-      description: Approves a previously created push message.
+      description: |
+        Approves a previously created push message. The request is an array, and each entry
+        carries the `messageId` of the message to approve.
       requestBody:
         required: true
         content:
@@ -1504,6 +1534,10 @@ paths:
           description: |
             No message exists with the given `messageId`. Netmera error code 5003.
             Documented in the Netmera Developer Guide; not verified against the live API.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendEmailAndSms:
     post:
@@ -1601,6 +1635,10 @@ paths:
                 code: 2004
                 error: Please add smsIysMessageType parameter into request!
           x-netmera-verified: '2026-09-06'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendEmailWithAttachment:
     post:
@@ -1648,6 +1686,12 @@ paths:
       responses:
         '200':
           description: The email was accepted for delivery.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendBulkEmail:
     post:
@@ -1715,6 +1759,12 @@ paths:
       responses:
         '200':
           description: The bulk email was accepted for delivery.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addEmail:
     post:
@@ -1756,6 +1806,12 @@ paths:
           description: |
             The email list was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addMsisdn:
     post:
@@ -1800,13 +1856,23 @@ paths:
           description: |
             The MSISDN list was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/geofence/add:
     post:
       operationId: addGeofence
       tags: [Geofence]
       summary: Create geofence
-      description: Creates a geofence.
+      description: |
+        Creates a geofence from a center point (`latitude`, `longitude`) and a `radius`. The unit
+        of the radius is set with `unit` (KM, Miles or Meters) and defaults to KM. The response
+        returns the identifier assigned to the new geofence; pass it to `removeGeofence` to delete
+        the geofence.
       requestBody:
         required: true
         content:
@@ -1831,6 +1897,8 @@ paths:
                     given by `unit` and defaults to KM.
                 unit:
                   type: string
+                  enum: [KM, Miles, Meters]
+                  default: KM
                   description: |
                     Unit of the radius. Can be KM, Miles or Meters. The default value is KM.
                 groups:
@@ -1861,6 +1929,12 @@ paths:
               example:
                 id: 1000
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/fireEvents:
     post:
@@ -1931,6 +2005,12 @@ paths:
           description: |
             The events were accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteUsersPermanently:
     post:
@@ -1971,6 +2051,12 @@ paths:
           description: |
             The deletion request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enablePush:
     post:
@@ -2000,6 +2086,12 @@ paths:
           description: |
             The opt-in request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disablePush:
     post:
@@ -2029,13 +2121,22 @@ paths:
           description: |
             The opt-out request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/tagUsers:
     post:
       operationId: tagUsers
       tags: [Tags]
       summary: Add tags to users
-      description: Adds one or more tags to the specified users.
+      description: |
+        Adds one or more tags to the specified users. `tag` accepts a single tag name or an array
+        of tag names, and `extIds` lists the external IDs of the users. Use `untagUsers` to
+        remove tags.
       requestBody:
         required: true
         content:
@@ -2050,13 +2151,21 @@ paths:
           description: |
             The tag was added. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/untagUsers:
     post:
       operationId: untagUsers
       tags: [Tags]
       summary: Remove tags from users
-      description: Removes a tag from the specified users.
+      description: |
+        Removes a tag from the specified users. `tag` accepts a single tag name or an array of
+        tag names, and `extIds` lists the external IDs of the users. Use `tagUsers` to add tags.
       requestBody:
         required: true
         content:
@@ -2071,6 +2180,12 @@ paths:
           description: |
             The tag was removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/setCategoryPreferences:
     post:
@@ -2145,6 +2260,12 @@ paths:
           description: |
             The preferences were updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getCategoryPreferences:
     get:
@@ -2221,13 +2342,21 @@ paths:
                   Offers: true
                   Newsletter: true
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getProfileAttributes:
     get:
       operationId: getProfileAttributes
       tags: [Profile Attributes]
       summary: Get profile attributes
-      description: Retrieves the current profile attributes of a user.
+      description: |
+        Retrieves the current profile attributes of the user identified by the `extId` query
+        parameter.
       parameters:
         - name: extId
           in: query
@@ -2259,13 +2388,22 @@ paths:
                   email: john.brown@example.com
                   age: 34
                   isSubscribed: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/setProfileAttributes:
     post:
       operationId: setProfileAttributes
       tags: [Profile Attributes]
       summary: Set profile attributes
-      description: Sets or updates profile attributes for the given users.
+      description: |
+        Sets or updates profile attributes for the given users. Each entry in the array pairs an
+        `extId` with a key-value `profile` object. Use `unsetProfileAttributes` to remove keys
+        from a single user.
       requestBody:
         required: true
         content:
@@ -2307,13 +2445,22 @@ paths:
           description: |
             The attributes were set. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/unsetProfileAttributes:
     post:
       operationId: unsetProfileAttributes
       tags: [Profile Attributes]
       summary: Unset profile attributes
-      description: Removes the specified keys from a user's profile.
+      description: |
+        Removes the specified keys from a user's profile. Each entry in the array pairs an
+        `extId` with the array of attribute keys to remove. To delete keys for all users at once,
+        use `deleteProfileAttributes`.
       requestBody:
         required: true
         content:
@@ -2342,6 +2489,12 @@ paths:
           description: |
             The attributes were removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/pushProfileAttributes:
     post:
@@ -2377,6 +2530,12 @@ paths:
           description: |
             The values were appended. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/pullProfileAttributes:
     post:
@@ -2413,13 +2572,21 @@ paths:
           description: |
             The values were removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteProfileAttributes:
     post:
       operationId: deleteProfileAttributes
       tags: [Profile Attributes]
       summary: Delete profile attributes
-      description: Deletes the specified profile keys from all users.
+      description: |
+        Deletes the specified profile keys from all users, not from a single user. To remove keys
+        for individual users, use `unsetProfileAttributes`.
       requestBody:
         required: true
         content:
@@ -2440,6 +2607,12 @@ paths:
       responses:
         '200':
           description: The attributes were deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteProfileAttributeValue:
     post:
@@ -2469,6 +2642,12 @@ paths:
       responses:
         '200':
           description: The value was deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getDevices:
     get:
@@ -2514,6 +2693,12 @@ paths:
                     token: a1b2c3d4e5f6g7
                     deviceModel: Pixel 5
                     pushPermitted: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getDeviceTokens:
     get:
@@ -2568,13 +2753,22 @@ paths:
                     token: abc123pushToken
                     deviceModel: Pixel 6
                     pushPermitted: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getSegments:
     get:
       operationId: getSegments
       tags: [Segments]
       summary: Get segments
-      description: Lists all segments defined in the panel.
+      description: |
+        Lists all segments defined in the panel. The platform is selected with the
+        `X-netmera-os` header (IOS or ANDROID). Each segment in the response carries an `id`,
+        `name`, `userCount` and `type`.
       parameters:
         - name: X-netmera-os
           in: header
@@ -2610,13 +2804,21 @@ paths:
                     name: segment
                     userCount: 16572
                     type: PRODUCT_SEGMENT
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getSegmentUsers:
     get:
       operationId: getSegmentUsers
       tags: [Segments]
       summary: Get segment users
-      description: Fetches the users in the specified segment.
+      description: |
+        Fetches the users in the segment given by the `id` query parameter. The platform is
+        selected with the `X-netmera-os` header (IOS or ANDROID).
       parameters:
         - name: id
           in: query
@@ -2660,6 +2862,12 @@ paths:
                   - externalId: user_123
                     msisdn: "905312345678"
                     email: user@example.com
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableMail:
     post:
@@ -2688,6 +2896,12 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableMail:
     post:
@@ -2716,13 +2930,22 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateEmail:
     post:
       operationId: updateEmail
       tags: [Email]
       summary: Update email address
-      description: Updates the email address of a user.
+      description: |
+        Updates the email address of the user identified by `extId`; the new address is sent in
+        `email`. Sending an empty value does not remove the address: the request returns `200` but
+        the stored address is kept. Use `removeEmail` to clear it.
       requestBody:
         required: true
         content:
@@ -2745,6 +2968,12 @@ paths:
           description: |
             The email address was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableSms:
     post:
@@ -2773,6 +3002,12 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableSms:
     post:
@@ -2801,6 +3036,12 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeEmail:
     post:
@@ -2845,13 +3086,20 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateMsisdn:
     post:
       operationId: updateMsisdn
       tags: [SMS]
       summary: Update phone number
-      description: Updates the MSISDN (phone number) of a user.
+      description: |
+        Updates the MSISDN (phone number) of the user identified by `extId`; the new number is
+        sent in `msisdn`. Sending an empty value does not remove the number; an empty value is
+        stored instead. Use `removeMsisdn` to clear it.
       requestBody:
         required: true
         content:
@@ -2874,6 +3122,12 @@ paths:
           description: |
             The MSISDN was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeMsisdn:
     post:
@@ -2917,6 +3171,10 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableWhatsApp:
     post:
@@ -2940,6 +3198,12 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableWhatsApp:
     post:
@@ -2963,6 +3227,12 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateWhatsApp:
     post:
@@ -2978,6 +3248,7 @@ paths:
           application/json:
             schema:
               type: object
+              required: [extId, wpNumbers]
               properties:
                 extId:
                   type: string
@@ -2995,6 +3266,12 @@ paths:
           description: |
             The WhatsApp number was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeWhatsApp:
     post:
@@ -3038,6 +3315,10 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/targeting/count:
     post:
@@ -3142,6 +3423,10 @@ paths:
                 count: 184523
         '400':
           description: Invalid targeting query.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/targeting/count-batch:
     post:
@@ -3234,6 +3519,10 @@ paths:
         '400':
           description: |
             `groupBy` is missing or contains neither `profile` nor `installation`.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/registerUsers:
     post:
@@ -3257,6 +3546,9 @@ paths:
               type: array
               items:
                 type: object
+                anyOf:
+                  - required: [platform]
+                  - required: [msisdn]
                 properties:
                   extId:
                     type: string
@@ -3306,6 +3598,10 @@ paths:
           description: The registrations were accepted for processing.
         '400':
           description: Every entry is invalid, or no registration was sent.
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteUsers:
     post:
@@ -3340,6 +3636,12 @@ paths:
       responses:
         '200':
           description: The deletion request was accepted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addTesters:
     post:
@@ -3377,6 +3679,12 @@ paths:
       responses:
         '200':
           description: The request was accepted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/count-user:
     get:
@@ -3399,6 +3707,12 @@ paths:
                     description: Number of users that currently have push permission.
               example:
                 count: 184523
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/promotion/add:
     post:
@@ -3452,6 +3766,12 @@ paths:
       responses:
         '200':
           description: The codes were accepted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/app/profile-attributes:
     get:
@@ -3508,6 +3828,12 @@ paths:
                     updateDate: 1767225600000
                     order: 3
                     calculated: false
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/app/events:
     get:
@@ -3575,6 +3901,12 @@ paths:
                         order: 0
                         calculated: false
                     inheritedAttributes: []
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/geofence/remove:
     post:
@@ -3605,6 +3937,12 @@ paths:
               schema:
                 type: boolean
               example: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushCategories:
     get:
@@ -3637,6 +3975,12 @@ paths:
                 categories:
                   - "1": announcements
                   - "2": promotions
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/getAllInbox:
     post:
@@ -3715,6 +4059,12 @@ paths:
                         title: msgtitle
                     cnts:
                       "1": 2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/get:
     get:
@@ -3757,6 +4107,12 @@ paths:
                 sts: 1787583761927
                 ctg: []
                 lbl: []
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/statusChange:
     post:
@@ -3796,6 +4152,12 @@ paths:
           description: |
             The statuses were updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -3806,6 +4168,36 @@ components:
       description: |
         REST API key. Available in the Netmera Panel under Developers > API.
 
+  responses:
+    BadRequest:
+      description: |
+        The request was rejected. The error table in the API description maps, for example,
+        a field type mismatch (`2004`), invalid JSON (`2009`) and a missing required parameter
+        (`2020`) to HTTP 400.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            code: 2004
+            error: Field 'notificationKey' should be a text
+    Forbidden:
+      description: |
+        Access was denied. The error table in the API description maps, for example, an invalid
+        API key (`2010`), a blocked IP address (`2021`) and an unauthorized action (`2022`) to
+        HTTP 403.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: |
+        The request failed on the server. The error table in the API description maps, for
+        example, an internal server error (`2001`) to HTTP 500.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     ErrorResponse:
       type: object
@@ -4544,6 +4936,9 @@ components:
 
     PushPermissionRequest:
       type: object
+      anyOf:
+        - required: [extId]
+        - required: [deviceToken]
       description: |
         Push permission change for all devices of a user (`extId`) or one device
         (`deviceToken`).
@@ -4574,6 +4969,9 @@ components:
 
     EmailPermissionRequest:
       type: object
+      anyOf:
+        - required: [extIds]
+        - required: [emailList]
       description: Email permission change by external user IDs or by email addresses.
       properties:
         extIds:
@@ -4589,6 +4987,9 @@ components:
 
     SmsPermissionRequest:
       type: object
+      anyOf:
+        - required: [extIds]
+        - required: [msisdnList]
       description: SMS permission change by external user IDs or by MSISDNs.
       properties:
         extIds:
@@ -4604,6 +5005,9 @@ components:
 
     WhatsAppPermissionRequest:
       type: object
+      anyOf:
+        - required: [extIds]
+        - required: [wpNumbers]
       description: WhatsApp permission change by external user IDs or WhatsApp numbers.
       properties:
         extIds:
@@ -4714,6 +5118,7 @@ components:
           description: The unique external ID of the user.
         status:
           type: integer
+          enum: [1, 2, 3, 4, 7]
           description: |
             Filters the messages based on read status. Accepted values: 1 = Read, 2 = Unread,
             3 = Read & Unread, 4 = Deleted, 7 = All.
