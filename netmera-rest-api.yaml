@@ -202,7 +202,7 @@ paths:
     post:
       operationId: sendBulkNotification
       tags: [Bulk Notifications]
-      summary: sendBulkNotification
+      summary: Send bulk notification
       description: |
         Sends a push notification to a target audience.
 
@@ -795,7 +795,7 @@ paths:
     post:
       operationId: sendNotification
       tags: [Transactional Notifications]
-      summary: sendNotification
+      summary: Send transactional notification
       description: |
         Sends a pre-configured notification definition to individual users. The definition is
         created either in the Netmera Panel or with `createNotificationDefinition`, and is
@@ -1095,7 +1095,7 @@ paths:
     post:
       operationId: createNotificationDefinition
       tags: [Transactional Notifications]
-      summary: createNotificationDefinition
+      summary: Create notification definition
       description: |
         Creates a transactional notification definition. The returned `notificationKey` is the
         identifier used in later `sendNotification` calls, connecting each transactional message
@@ -1336,7 +1336,7 @@ paths:
     get:
       operationId: getPushStats
       tags: [Push Statistics]
-      summary: getPushStats
+      summary: Get push statistics
       description: |
         Returns notification statistics, either for a single notification key or for every
         notification in a date range.
@@ -1438,7 +1438,7 @@ paths:
     get:
       operationId: getPushResult
       tags: [Push Statistics]
-      summary: getPushResult
+      summary: Get push results
       description: |
         Retrieves per-user push results (success or failure). If `start` and `end` are not
         specified, the results of the last 2 weeks are returned.
@@ -1540,7 +1540,7 @@ paths:
     post:
       operationId: sendPushApproval
       tags: [Push Approval]
-      summary: sendPushApproval
+      summary: Send push approval
       description: Approves a previously created push message.
       requestBody:
         required: true
@@ -1569,7 +1569,7 @@ paths:
     post:
       operationId: sendEmailAndSms
       tags: [Email, SMS]
-      summary: sendEmailAndSms
+      summary: Send email or SMS
       description: |
         Sends an email or an SMS, including the message content in the request instead of
         referencing a template created in the panel. The same endpoint is used to create a
@@ -1666,7 +1666,7 @@ paths:
     post:
       operationId: sendEmailWithAttachment
       tags: [Email]
-      summary: sendEmailWithAttachment
+      summary: Send email with attachment
       description: |
         Sends an email with one or more attachments, referencing a notification key created in
         the panel. Submit the request as `multipart/form-data`.
@@ -1713,7 +1713,7 @@ paths:
     post:
       operationId: sendBulkEmail
       tags: [Email]
-      summary: sendBulkEmail
+      summary: Send bulk email
       description: |
         Triggers an email template created in the Netmera panel by referencing its template ID.
         This is useful when email content is managed by an external system — such as a CRM —
@@ -1780,7 +1780,7 @@ paths:
     post:
       operationId: addEmail
       tags: [Email]
-      summary: addEmail
+      summary: Add emails
       description: |
         Uploads or updates a list of email addresses in Netmera.
 
@@ -1821,7 +1821,7 @@ paths:
     post:
       operationId: addMsisdn
       tags: [SMS]
-      summary: addMsisdn
+      summary: Add phone numbers
       description: |
         Adds users with the specified MSISDNs (phone numbers) to the Netmera platform.
 
@@ -1865,7 +1865,7 @@ paths:
     post:
       operationId: addGeofence
       tags: [Geofence]
-      summary: geofence/add
+      summary: Create geofence
       description: Creates a geofence.
       requestBody:
         required: true
@@ -1926,7 +1926,7 @@ paths:
     post:
       operationId: fireEvents
       tags: [Events]
-      summary: fireEvents
+      summary: Fire events
       description: |
         Sends custom events associated with a specific user. Each event must include `extId` to
         identify the user and `name` to specify the event type. Additional attributes can be
@@ -2003,7 +2003,7 @@ paths:
     post:
       operationId: deleteUsersPermanently
       tags: [Users]
-      summary: deleteUsersPermanently
+      summary: Delete users permanently
       description: |
         Permanently deletes all user data from Netmera, including all associated devices,
         profile attributes, events and records for the specified users.
@@ -2043,7 +2043,7 @@ paths:
     post:
       operationId: enablePush
       tags: [Users]
-      summary: enablePush
+      summary: Enable push permission
       description: |
         Opts in all devices of a user, or one specific device, for push notifications.
         Provide either `extId` or `deviceToken`.
@@ -2072,7 +2072,7 @@ paths:
     post:
       operationId: disablePush
       tags: [Users]
-      summary: disablePush
+      summary: Disable push permission
       description: |
         Opts out all devices of a user, or one specific device, from receiving push
         notifications. Provide either `extId` or `deviceToken`.
@@ -2101,7 +2101,7 @@ paths:
     post:
       operationId: tagUsers
       tags: [Tags]
-      summary: tagUsers
+      summary: Add tags to users
       description: Adds one or more tags to the specified users.
       requestBody:
         required: true
@@ -2122,7 +2122,7 @@ paths:
     post:
       operationId: untagUsers
       tags: [Tags]
-      summary: untagUsers
+      summary: Remove tags from users
       description: Removes a tag from the specified users.
       requestBody:
         required: true
@@ -2143,7 +2143,7 @@ paths:
     post:
       operationId: setCategoryPreferences
       tags: [Categories]
-      summary: setCategoryPreferences
+      summary: Set category preferences
       description: Enables or disables category-specific opt-in preferences for a user.
       requestBody:
         required: true
@@ -2181,7 +2181,7 @@ paths:
     get:
       operationId: getCategoryPreferences
       tags: [Categories]
-      summary: getCategoryPreferences
+      summary: Get category preferences
       description: |
         Retrieves category-based opt-in preferences for a specific user.
 
@@ -2222,7 +2222,7 @@ paths:
     get:
       operationId: getProfileAttributes
       tags: [Profile Attributes]
-      summary: getProfileAttributes
+      summary: Get profile attributes
       description: Retrieves the current profile attributes of a user.
       parameters:
         - name: extId
@@ -2260,7 +2260,7 @@ paths:
     post:
       operationId: setProfileAttributes
       tags: [Profile Attributes]
-      summary: setProfileAttributes
+      summary: Set profile attributes
       description: Sets or updates profile attributes for the given users.
       requestBody:
         required: true
@@ -2316,7 +2316,7 @@ paths:
     post:
       operationId: unsetProfileAttributes
       tags: [Profile Attributes]
-      summary: unsetProfileAttributes
+      summary: Unset profile attributes
       description: Removes the specified keys from a user's profile.
       requestBody:
         required: true
@@ -2351,7 +2351,7 @@ paths:
     post:
       operationId: pushProfileAttributes
       tags: [Profile Attributes]
-      summary: pushProfileAttributes
+      summary: Append values to array attributes
       description: |
         Appends values to array-type profile attributes. The target attribute must be an array.
       requestBody:
@@ -2386,7 +2386,7 @@ paths:
     post:
       operationId: pullProfileAttributes
       tags: [Profile Attributes]
-      summary: pullProfileAttributes
+      summary: Remove values from array attributes
       description: |
         Removes values from array-type profile attributes. The keys must match array-type
         attributes.
@@ -2422,7 +2422,7 @@ paths:
     post:
       operationId: deleteProfileAttributes
       tags: [Profile Attributes]
-      summary: deleteProfileAttributes
+      summary: Delete profile attributes
       description: Deletes the specified profile keys from all users.
       requestBody:
         required: true
@@ -2449,7 +2449,7 @@ paths:
     post:
       operationId: deleteProfileAttributeValue
       tags: [Profile Attributes]
-      summary: deleteProfileAttributeValue
+      summary: Delete profile attribute value
       description: Deletes a specific value from a profile attribute across all users.
       requestBody:
         required: true
@@ -2478,7 +2478,7 @@ paths:
     get:
       operationId: getDevices
       tags: [Devices]
-      summary: getDevices
+      summary: Get user devices
       description: |
         Returns all devices associated with a user, optionally filtered by push permission.
       parameters:
@@ -2523,7 +2523,7 @@ paths:
     get:
       operationId: getDeviceTokens
       tags: [Devices]
-      summary: getDeviceTokens
+      summary: Get device tokens
       description: |
         Fetches device tokens in a paginated format.
 
@@ -2577,7 +2577,7 @@ paths:
     get:
       operationId: getSegments
       tags: [Segments]
-      summary: getSegments
+      summary: Get segments
       description: Lists all segments defined in the panel.
       parameters:
         - name: X-netmera-os
@@ -2619,7 +2619,7 @@ paths:
     get:
       operationId: getSegmentUsers
       tags: [Segments]
-      summary: getSegmentUsers
+      summary: Get segment users
       description: Fetches the users in the specified segment.
       parameters:
         - name: id
@@ -2669,7 +2669,7 @@ paths:
     post:
       operationId: enableMail
       tags: [Email]
-      summary: enableMail
+      summary: Enable email permission
       description: |
         Grants email permission. Provide `extIds`, or `emailList` as an alternative.
       requestBody:
@@ -2697,7 +2697,7 @@ paths:
     post:
       operationId: disableMail
       tags: [Email]
-      summary: disableMail
+      summary: Disable email permission
       description: |
         Revokes email permission. Provide `extIds`, or `emailList` as an alternative.
       requestBody:
@@ -2725,7 +2725,7 @@ paths:
     post:
       operationId: updateEmail
       tags: [Email]
-      summary: updateEmail
+      summary: Update email address
       description: Updates the email address of a user.
       requestBody:
         required: true
@@ -2754,7 +2754,7 @@ paths:
     post:
       operationId: enableSms
       tags: [SMS]
-      summary: enableSms
+      summary: Enable SMS permission
       description: |
         Grants SMS permission. Provide `extIds`, or `msisdnList` as an alternative.
       requestBody:
@@ -2782,7 +2782,7 @@ paths:
     post:
       operationId: disableSms
       tags: [SMS]
-      summary: disableSms
+      summary: Disable SMS permission
       description: |
         Revokes SMS permission. Provide `extIds`, or `msisdnList` as an alternative.
       requestBody:
@@ -2810,7 +2810,7 @@ paths:
     post:
       operationId: removeEmail
       tags: [Email]
-      summary: removeEmail
+      summary: Remove email address
       description: |
         Removes the email address of a user. Only the email field is cleared: the user, its external ID,
         devices, profile attributes and email permission state are kept. A new address can be
@@ -2854,7 +2854,7 @@ paths:
     post:
       operationId: updateMsisdn
       tags: [SMS]
-      summary: updateMsisdn
+      summary: Update phone number
       description: Updates the MSISDN (phone number) of a user.
       requestBody:
         required: true
@@ -2883,7 +2883,7 @@ paths:
     post:
       operationId: removeMsisdn
       tags: [SMS]
-      summary: removeMsisdn
+      summary: Remove phone number
       description: |
         Removes the MSISDN of a user. Only the MSISDN field is cleared: the user, its external ID,
         devices, profile attributes and SMS permission state are kept. A new number can be
@@ -2926,7 +2926,7 @@ paths:
     post:
       operationId: enableWhatsApp
       tags: [WhatsApp]
-      summary: enableWhatsApp
+      summary: Enable WhatsApp permission
       description: |
         Enables WhatsApp permission for one or more users. Users can be addressed by `extIds`
         or by their WhatsApp numbers.
@@ -2949,7 +2949,7 @@ paths:
     post:
       operationId: disableWhatsApp
       tags: [WhatsApp]
-      summary: disableWhatsApp
+      summary: Disable WhatsApp permission
       description: |
         Disables WhatsApp permission for one or more users. Users can be addressed by `extIds`
         or by their WhatsApp numbers.
@@ -2972,7 +2972,7 @@ paths:
     post:
       operationId: updateWhatsApp
       tags: [WhatsApp]
-      summary: updateWhatsApp
+      summary: Update WhatsApp number
       description: |
         Updates the WhatsApp number of a WhatsApp user. Both the external ID and the number
         fields are required.
@@ -3004,7 +3004,7 @@ paths:
     post:
       operationId: removeWhatsApp
       tags: [WhatsApp]
-      summary: removeWhatsApp
+      summary: Remove WhatsApp number
       description: |
         Removes the WhatsApp number of a user. Only the WhatsApp number field is cleared: the user, its external ID,
         devices, profile attributes and WhatsApp permission state are kept. A new number can be
@@ -3047,7 +3047,7 @@ paths:
     post:
       operationId: targetingCount
       tags: [Targeting]
-      summary: targeting/count
+      summary: Count targeted users
       description: |
         Returns the number of unique users whose profiles match a targeting query. It enables
         popularity and adoption metrics based on user-defined profile data without exporting
@@ -3151,7 +3151,7 @@ paths:
     post:
       operationId: getAllInbox
       tags: [Inbox]
-      summary: inbox/getAllInbox
+      summary: List inbox messages
       description: |
         Fetches the push notifications stored on the server for a user. Supports pagination and
         filtering by status or time range.
@@ -3229,7 +3229,7 @@ paths:
     get:
       operationId: getInboxMessage
       tags: [Inbox]
-      summary: inbox/get
+      summary: Get an inbox message
       description: Retrieves a single inbox message using its push instance ID.
       parameters:
         - name: piid
@@ -3271,7 +3271,7 @@ paths:
     post:
       operationId: inboxStatusChange
       tags: [Inbox]
-      summary: inbox/statusChange
+      summary: Change inbox message status
       description: |
         Updates the status of one or more inbox messages. `piids` defines the messages whose
         statuses will be updated.
