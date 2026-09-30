@@ -70,16 +70,10 @@ came back.
 so. No response schema is written for an endpoint whose response has not been seen.
 No field is marked required unless something says it is.
 
-**Errors: generic ones point at the table, specific ones are recorded where seen.** Every
-operation references three shared responses (`BadRequest`, `Forbidden`,
-`InternalServerError` under `components/responses`). They carry no body example of their
-own beyond the verified `ErrorResponse` example and only cite what the error table in
-`info.description` already says, for example that an invalid API key (`2010`) maps to HTTP
-403. They do not claim that a given endpoint returns a particular code. An error that is
-specific to one endpoint appears on that operation only when it has been observed or is
-documented for that endpoint. 401 and 404 are not added generically: the table maps no
-REST API error to 404, and its only 401 entry (`5007`, "Please login") is not tied to API
-key calls. The full error code table lives once, in `info.description`.
+**Errors are documented where they are known, not generically.** Operations do not
+carry a boilerplate set of 400/401/403/500 responses. An error appears on an
+operation when that specific failure has been observed or is documented for that
+endpoint. The full Netmera error code table lives once, in `info.description`.
 
 **`x-netmera-verified: <date>`** marks a response confirmed against the live API.
 It is invisible to readers and exists so a regeneration from the guide cannot

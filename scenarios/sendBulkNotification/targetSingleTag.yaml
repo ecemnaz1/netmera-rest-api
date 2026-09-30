@@ -59,12 +59,6 @@ paths:
             reference the notification later, for example for an Android live push update.
 
             '
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
       summary: Send bulk notification
       tags:
       - Bulk Notifications
@@ -77,44 +71,6 @@ components:
       description: 'REST API key. Available in the Netmera Panel under Developers > API.
 
         '
-  responses:
-    BadRequest:
-      description: 'The request was rejected. The error table in the API description maps, for example,
-
-        a field type mismatch (`2004`), invalid JSON (`2009`) and a missing required parameter
-
-        (`2020`) to HTTP 400.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 2004
-            error: Field 'notificationKey' should be a text
-    Forbidden:
-      description: 'Access was denied. The error table in the API description maps, for example, an invalid
-
-        API key (`2010`), a blocked IP address (`2021`) and an unauthorized action (`2022`) to
-
-        HTTP 403.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: 'The request failed on the server. The error table in the API description maps, for
-
-        example, an internal server error (`2001`) to HTTP 500.
-
-        '
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     AndroidOptions:
       type: object
@@ -450,29 +406,6 @@ components:
           type: boolean
           description: Android only. No action is triggered when the user taps the notification.
       additionalProperties: true
-    ErrorResponse:
-      type: object
-      description: 'Application-level error envelope returned by the API.
-
-
-        Framework-level failures such as an unmatched route do not use this shape; they
-
-        return an RFC 9457 problem detail (`type`, `title`, `status`, `detail`, `instance`)
-
-        instead.
-
-        '
-      properties:
-        code:
-          type: integer
-          description: Netmera error code. See the error table in the API description.
-        error:
-          type: string
-          description: Human-readable explanation of the failure.
-      example:
-        code: 2004
-        error: Field 'notificationKey' should be a text
-      x-netmera-verified: '2026-09-06'
     IosOptions:
       type: object
       description: Optional parameters specific to iOS.

@@ -775,12 +775,6 @@ paths:
                       - type: integer
                       - type: string
                 additionalProperties: true
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendNotification:
     post:
@@ -1044,10 +1038,6 @@ paths:
                 code: 2004
                 error: Field 'notificationKey' should be a text
           x-netmera-verified: '2026-09-06'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/createNotificationDefinition:
     post:
@@ -1281,12 +1271,6 @@ paths:
               example:
                 notificationKey: 96
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushStats:
     get:
@@ -1389,12 +1373,6 @@ paths:
                         startDate: 1504790402907
                         endDate: 1504790402909
                         notificationKey: 748
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushResult:
     get:
@@ -1497,12 +1475,6 @@ paths:
                     timeStamp: 1557819194426
                     msgTitle: Awesome Title
                     msgText: How is it going, Jon?
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendPushApproval:
     post:
@@ -1534,10 +1506,6 @@ paths:
           description: |
             No message exists with the given `messageId`. Netmera error code 5003.
             Documented in the Netmera Developer Guide; not verified against the live API.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendEmailAndSms:
     post:
@@ -1635,10 +1603,6 @@ paths:
                 code: 2004
                 error: Please add smsIysMessageType parameter into request!
           x-netmera-verified: '2026-09-06'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendEmailWithAttachment:
     post:
@@ -1686,12 +1650,6 @@ paths:
       responses:
         '200':
           description: The email was accepted for delivery.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/sendBulkEmail:
     post:
@@ -1759,12 +1717,6 @@ paths:
       responses:
         '200':
           description: The bulk email was accepted for delivery.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addEmail:
     post:
@@ -1806,12 +1758,6 @@ paths:
           description: |
             The email list was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addMsisdn:
     post:
@@ -1856,12 +1802,6 @@ paths:
           description: |
             The MSISDN list was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/geofence/add:
     post:
@@ -1929,12 +1869,6 @@ paths:
               example:
                 id: 1000
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/fireEvents:
     post:
@@ -2005,12 +1939,6 @@ paths:
           description: |
             The events were accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteUsersPermanently:
     post:
@@ -2051,12 +1979,6 @@ paths:
           description: |
             The deletion request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enablePush:
     post:
@@ -2086,12 +2008,6 @@ paths:
           description: |
             The opt-in request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disablePush:
     post:
@@ -2121,12 +2037,6 @@ paths:
           description: |
             The opt-out request was accepted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/tagUsers:
     post:
@@ -2151,12 +2061,6 @@ paths:
           description: |
             The tag was added. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/untagUsers:
     post:
@@ -2180,12 +2084,6 @@ paths:
           description: |
             The tag was removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/setCategoryPreferences:
     post:
@@ -2260,12 +2158,6 @@ paths:
           description: |
             The preferences were updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getCategoryPreferences:
     get:
@@ -2342,12 +2234,6 @@ paths:
                   Offers: true
                   Newsletter: true
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getProfileAttributes:
     get:
@@ -2388,12 +2274,6 @@ paths:
                   email: john.brown@example.com
                   age: 34
                   isSubscribed: true
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/setProfileAttributes:
     post:
@@ -2445,12 +2325,6 @@ paths:
           description: |
             The attributes were set. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/unsetProfileAttributes:
     post:
@@ -2489,12 +2363,6 @@ paths:
           description: |
             The attributes were removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/pushProfileAttributes:
     post:
@@ -2530,12 +2398,6 @@ paths:
           description: |
             The values were appended. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/pullProfileAttributes:
     post:
@@ -2572,12 +2434,6 @@ paths:
           description: |
             The values were removed. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteProfileAttributes:
     post:
@@ -2607,12 +2463,6 @@ paths:
       responses:
         '200':
           description: The attributes were deleted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteProfileAttributeValue:
     post:
@@ -2642,12 +2492,6 @@ paths:
       responses:
         '200':
           description: The value was deleted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getDevices:
     get:
@@ -2693,12 +2537,6 @@ paths:
                     token: a1b2c3d4e5f6g7
                     deviceModel: Pixel 5
                     pushPermitted: true
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getDeviceTokens:
     get:
@@ -2753,12 +2591,6 @@ paths:
                     token: abc123pushToken
                     deviceModel: Pixel 6
                     pushPermitted: true
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getSegments:
     get:
@@ -2804,12 +2636,6 @@ paths:
                     name: segment
                     userCount: 16572
                     type: PRODUCT_SEGMENT
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getSegmentUsers:
     get:
@@ -2862,12 +2688,6 @@ paths:
                   - externalId: user_123
                     msisdn: "905312345678"
                     email: user@example.com
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableMail:
     post:
@@ -2896,12 +2716,6 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableMail:
     post:
@@ -2930,12 +2744,6 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateEmail:
     post:
@@ -2968,12 +2776,6 @@ paths:
           description: |
             The email address was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableSms:
     post:
@@ -3002,12 +2804,6 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableSms:
     post:
@@ -3036,12 +2832,6 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeEmail:
     post:
@@ -3086,10 +2876,6 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateMsisdn:
     post:
@@ -3122,12 +2908,6 @@ paths:
           description: |
             The MSISDN was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeMsisdn:
     post:
@@ -3171,10 +2951,6 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/enableWhatsApp:
     post:
@@ -3198,12 +2974,6 @@ paths:
           description: |
             The permission was granted. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/disableWhatsApp:
     post:
@@ -3227,12 +2997,6 @@ paths:
           description: |
             The permission was revoked. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/updateWhatsApp:
     post:
@@ -3266,12 +3030,6 @@ paths:
           description: |
             The WhatsApp number was updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/removeWhatsApp:
     post:
@@ -3315,10 +3073,6 @@ paths:
               schema:
                 type: string
               example: Please provide an external id.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/targeting/count:
     post:
@@ -3423,10 +3177,6 @@ paths:
                 count: 184523
         '400':
           description: Invalid targeting query.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/targeting/count-batch:
     post:
@@ -3519,10 +3269,6 @@ paths:
         '400':
           description: |
             `groupBy` is missing or contains neither `profile` nor `installation`.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/registerUsers:
     post:
@@ -3598,10 +3344,6 @@ paths:
           description: The registrations were accepted for processing.
         '400':
           description: Every entry is invalid, or no registration was sent.
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/deleteUsers:
     post:
@@ -3636,12 +3378,6 @@ paths:
       responses:
         '200':
           description: The deletion request was accepted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/addTesters:
     post:
@@ -3679,12 +3415,6 @@ paths:
       responses:
         '200':
           description: The request was accepted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/count-user:
     get:
@@ -3707,12 +3437,6 @@ paths:
                     description: Number of users that currently have push permission.
               example:
                 count: 184523
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/promotion/add:
     post:
@@ -3766,12 +3490,6 @@ paths:
       responses:
         '200':
           description: The codes were accepted.
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/app/profile-attributes:
     get:
@@ -3828,12 +3546,6 @@ paths:
                     updateDate: 1767225600000
                     order: 3
                     calculated: false
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/app/events:
     get:
@@ -3901,12 +3613,6 @@ paths:
                         order: 0
                         calculated: false
                     inheritedAttributes: []
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/geofence/remove:
     post:
@@ -3937,12 +3643,6 @@ paths:
               schema:
                 type: boolean
               example: true
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/getPushCategories:
     get:
@@ -3975,12 +3675,6 @@ paths:
                 categories:
                   - "1": announcements
                   - "2": promotions
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/getAllInbox:
     post:
@@ -4059,12 +3753,6 @@ paths:
                         title: msgtitle
                     cnts:
                       "1": 2
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/get:
     get:
@@ -4107,12 +3795,6 @@ paths:
                 sts: 1787583761927
                 ctg: []
                 lbl: []
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
   /rest/3.0/inbox/statusChange:
     post:
@@ -4152,12 +3834,6 @@ paths:
           description: |
             The statuses were updated. Returns no response body.
           x-netmera-verified: '2026-09-06'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
 
 components:
   securitySchemes:
@@ -4168,36 +3844,6 @@ components:
       description: |
         REST API key. Available in the Netmera Panel under Developers > API.
 
-  responses:
-    BadRequest:
-      description: |
-        The request was rejected. The error table in the API description maps, for example,
-        a field type mismatch (`2004`), invalid JSON (`2009`) and a missing required parameter
-        (`2020`) to HTTP 400.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-          example:
-            code: 2004
-            error: Field 'notificationKey' should be a text
-    Forbidden:
-      description: |
-        Access was denied. The error table in the API description maps, for example, an invalid
-        API key (`2010`), a blocked IP address (`2021`) and an unauthorized action (`2022`) to
-        HTTP 403.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: |
-        The request failed on the server. The error table in the API description maps, for
-        example, an internal server error (`2001`) to HTTP 500.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
     ErrorResponse:
       type: object
