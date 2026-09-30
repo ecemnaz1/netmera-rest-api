@@ -1971,10 +1971,6 @@ paths:
                     grandTotal: 35.0
               aiQuerySubmitted:
                 summary: Conversational AI — query submitted
-                description: |
-                  Each time a tracked user action occurs inside the tool handler of a conversational
-                  AI app, the app backend sends a structured event to Netmera. Events originate from
-                  the app server, not from the AI platform directly.
                 value:
                   - extId: user_98765
                     name: AIQuerySubmitted
@@ -1983,9 +1979,6 @@ paths:
                     category: travel_planning
               aiConversionCompleted:
                 summary: Conversational AI — conversion completed
-                description: |
-                  Sent from the app server when the user completes a conversion. `sourceEvent`
-                  references the originating event so the conversion can be attributed to it.
                 value:
                   - extId: user_98765
                     name: AIConversionCompleted
@@ -2291,14 +2284,6 @@ paths:
                       name: John
               registerUser:
                 summary: Identify and register a user
-                description: |
-                  Netmera requires a user identity to attach events to a profile. At the start of
-                  each session, the backend must either match the user to an existing Netmera
-                  profile or create a new one. Identifying the user by external ID (`extId`) is
-                  recommended.
-
-                  If the user is anonymous, generate a temporary session ID and merge it with a
-                  known identity after authentication.
                 value:
                   - extId: user_98765
                     profile:
@@ -3056,31 +3041,6 @@ paths:
         Common uses are social proof indicators, entity-based popularity metrics, favorites,
         preferences, interests or affinity counts, and content, product, category or brand
         popularity.
-
-        ### Use cases
-
-        **Entity popularity display.** Show how many users have favorited or selected a specific
-        entity on a detail page, such as an athlete, team or sports entity; a product or brand; a
-        content item (article, video, creator); or a category or interest. Example UI copy:
-        "Favorited by X users".
-
-        **Interest and preference insights.** Understand how many users have selected a specific
-        value in their profile, such as a favorite team, brand or category; a preferred content
-        type; an interest or hobby; or a subscription preference. This information can be used
-        for analytics, segmentation previews or in-app messaging.
-
-        ### Data model
-
-        The API operates on User Profile Attributes configured in Netmera. Profile attributes
-        may store values as single values or arrays, depending on the attribute definition.
-        Example attributes:
-
-        | Attribute name | Type | Description |
-        | --- | --- | --- |
-        | `favoriteFootballPlayers` | String array | IDs of favorited players |
-        | `soccerFavoriteTeam` | String or string array | Favorited team ID or IDs |
-        | `favoriteBrands` | String array | IDs of favorited brands |
-        | `userInterests` | String array | Interest or category identifiers |
 
         ### Targeting
 
