@@ -207,50 +207,7 @@ paths:
       operationId: sendBulkNotification
       tags: [Bulk Notifications]
       summary: Send bulk notification
-      description: |
-        Sends a push notification to a target audience.
-
-        The minimal payload requires `message.title`, `message.platforms`, `message.text` and a
-        non-empty `target`. To reach every user of the selected platforms, set
-        `target.sendToAll` to `true`.
-
-        ### Targeting notes
-
-        - The `target` object cannot be empty.
-        - Profile attribute codes are listed in **Netmera Panel > Developers > Profile Attributes > Code**.
-        - When multiple attributes are defined in the same `target.profile` object, the
-          conditions are evaluated with AND logic.
-        - `tag` and `segment` accept a single value, an array of values (OR), or the operators
-          `$or`, `$and` and `$not`.
-
-        ### Platform-specific overrides
-
-        `click` provides the default click action. The `ios` and `android` blocks override
-        `title`, `text` and `click` per platform. Supported click actions are `url` (opens a web
-        page, iOS and Android), `deeplink` (launches the app via a registered deeplink URI, iOS
-        and Android) and `doNothing` (Android only — no automatic click handling is applied, so a
-        custom click handler is required).
-
-        ### Notification grouping
-
-        Assigning the same `threadId` to related notifications groups them in the notification
-        center. Supported on iOS and Android, on both `sendBulkNotification` and
-        `createNotificationDefinition`.
-
-        ### Custom buttons
-
-        Button sets must first be created in the panel under **Settings > Button Sets**. The
-        button name itself is not mandatory. For platform-specific delivery, specify the desired
-        platforms or browsers separately (Android, iOS for mobile; FIREFOX, EDGE, MACOS, CHROME
-        for web). With `buttonSet.setAttrOrTag`, a button click can set a profile attribute or a
-        tag — the button click action must be set to **Open App**, and the operation is triggered
-        after the push open event inside the application module.
-
-        ### Android live push update
-
-        Send the notification first and save the `NotificationKey` returned in the response.
-        To modify that notification afterwards, send a new request with
-        `message.customJson.refID` set to the saved notification key value.
+      description: Sends a push notification to a target audience.
       requestBody:
         required: true
         content:

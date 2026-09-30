@@ -19,29 +19,12 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: "Send with the saved NotificationKey as `refID` to modify a notification already delivered.\n\
-        \nSends a push notification to a target audience.\n\nThe minimal payload requires `message.title`,\
-        \ `message.platforms`, `message.text` and a\nnon-empty `target`. To reach every user of the selected\
-        \ platforms, set\n`target.sendToAll` to `true`.\n\n### Targeting notes\n\n- The `target` object\
-        \ cannot be empty.\n- Profile attribute codes are listed in **Netmera Panel > Developers > Profile\
-        \ Attributes > Code**.\n- When multiple attributes are defined in the same `target.profile` object,\
-        \ the\n  conditions are evaluated with AND logic.\n- `tag` and `segment` accept a single value,\
-        \ an array of values (OR), or the operators\n  `$or`, `$and` and `$not`.\n\n### Platform-specific\
-        \ overrides\n\n`click` provides the default click action. The `ios` and `android` blocks override\n\
-        `title`, `text` and `click` per platform. Supported click actions are `url` (opens a web\npage,\
-        \ iOS and Android), `deeplink` (launches the app via a registered deeplink URI, iOS\nand Android)\
-        \ and `doNothing` (Android only — no automatic click handling is applied, so a\ncustom click handler\
-        \ is required).\n\n### Notification grouping\n\nAssigning the same `threadId` to related notifications\
-        \ groups them in the notification\ncenter. Supported on iOS and Android, on both `sendBulkNotification`\
-        \ and\n`createNotificationDefinition`.\n\n### Custom buttons\n\nButton sets must first be created\
-        \ in the panel under **Settings > Button Sets**. The\nbutton name itself is not mandatory. For\
-        \ platform-specific delivery, specify the desired\nplatforms or browsers separately (Android,\
-        \ iOS for mobile; FIREFOX, EDGE, MACOS, CHROME\nfor web). With `buttonSet.setAttrOrTag`, a button\
-        \ click can set a profile attribute or a\ntag — the button click action must be set to **Open\
-        \ App**, and the operation is triggered\nafter the push open event inside the application module.\n\
-        \n### Android live push update\n\nSend the notification first and save the `NotificationKey` returned\
-        \ in the response.\nTo modify that notification afterwards, send a new request with\n`message.customJson.refID`\
-        \ set to the saved notification key value.\n"
+      description: 'Send with the saved NotificationKey as `refID` to modify a notification already delivered.
+
+
+        Sends a push notification to a target audience.
+
+        '
       operationId: sendBulkNotification
       requestBody:
         content:
