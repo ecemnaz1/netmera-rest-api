@@ -42,22 +42,11 @@ paths:
         required: true
       responses:
         '200':
-          content:
-            application/json:
-              schema:
-                additionalProperties: true
-                properties:
-                  notificationKey:
-                    description: Key of the created notification.
-                    oneOf:
-                    - type: integer
-                    - type: string
-                type: object
-          description: 'The notification was accepted. The response contains the notification key of the
+          description: 'The notification was accepted. The response shows the `NotificationKey` of the
 
-            created push, shown in the guide as `NotificationKey: 1000`. Save this value to
+            created push. Save this value to reference the notification later, for example as
 
-            reference the notification later, for example for an Android live push update.
+            `refID` in an Android live push update.
 
             '
       summary: Send bulk notification
@@ -79,7 +68,7 @@ components:
       properties:
         title:
           type: string
-          description: Notification title shown on Android, overriding the message title.
+          description: Title of the push notification on Android.
         subtitle:
           type: string
         sound:
@@ -413,7 +402,7 @@ components:
       properties:
         title:
           type: string
-          description: Notification title shown on iOS, overriding the message title.
+          description: Title of the push notification on iOS.
         subtitle:
           type: string
         sound:

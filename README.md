@@ -105,8 +105,10 @@ These are defects in the source documentation, recorded here so they are not
 
 ## Still unverified
 
-Responses for `sendPushApproval`, `sendEmailWithAttachment`, `sendBulkEmail`,
-`deleteProfileAttributes` and `deleteProfileAttributeValue` have not been captured.
+Responses for `sendBulkNotification`, `sendPushApproval`, `sendEmailWithAttachment`,
+`sendBulkEmail`, `deleteProfileAttributes` and `deleteProfileAttributeValue` have not been
+captured. The Developer Guide shows the bulk response only as `NotificationKey: 1000`, so
+its field name and type are left undocumented.
 They carry no response schema rather than a guessed one.
 
 ## Open questions for Netmera engineering
