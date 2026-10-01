@@ -108,9 +108,11 @@ them, so these fields are not marked required at the top level.
 
 ## Still unverified
 
-Responses for `sendBulkNotification`, `sendEmailWithAttachment`, `sendBulkEmail` and
-`deleteProfileAttributes` have not been captured. The Developer Guide shows the bulk response only as `NotificationKey: 1000`, so
-its body is left undocumented.
+Responses for `sendEmailWithAttachment`, `sendBulkEmail` and `deleteProfileAttributes`
+have not been captured. The `sendBulkNotification` response has the same
+`{"notificationKey": <integer>}` shape as `createNotificationDefinition`, as confirmed by
+the product team; it has not been captured live, so it carries no `x-netmera-verified`
+marker.
 They carry no response schema rather than a guessed one.
 
 ## Open questions for Netmera engineering

@@ -69,11 +69,21 @@ paths:
         required: true
       responses:
         '200':
-          description: 'The notification was accepted. The response shows the `NotificationKey` of the
+          content:
+            application/json:
+              example:
+                notificationKey: 1000
+              schema:
+                properties:
+                  notificationKey:
+                    description: Identifier of the created push notification.
+                    type: integer
+                required:
+                - notificationKey
+                type: object
+          description: 'The notification was accepted. `notificationKey` is the identifier of the created
 
-            created push. Save this value to reference the notification later, for example as
-
-            `refID` in an Android live push update.
+            push notification.
 
             '
       summary: Send bulk notification

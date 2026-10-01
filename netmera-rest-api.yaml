@@ -736,9 +736,19 @@ paths:
       responses:
         '200':
           description: |
-            The notification was accepted. The response shows the `NotificationKey` of the
-            created push. Save this value to reference the notification later, for example as
-            `refID` in an Android live push update.
+            The notification was accepted. `notificationKey` is the identifier of the created
+            push notification.
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [notificationKey]
+                properties:
+                  notificationKey:
+                    type: integer
+                    description: Identifier of the created push notification.
+              example:
+                notificationKey: 1000
 
   /rest/3.0/sendNotification:
     post:
