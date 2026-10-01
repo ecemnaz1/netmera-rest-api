@@ -91,7 +91,7 @@ components:
       properties:
         title:
           type: string
-          description: Notification title shown on Android, overriding the message title.
+          description: Title of the push notification on Android.
         subtitle:
           type: string
         sound:
@@ -243,7 +243,7 @@ components:
       properties:
         title:
           type: string
-          description: Notification title shown on iOS, overriding the message title.
+          description: Title of the push notification on iOS.
         subtitle:
           type: string
         sound:
@@ -297,6 +297,7 @@ components:
       description: A single transactional notification send request.
       required:
       - notificationKey
+      - target
       properties:
         notificationKey:
           type: string
