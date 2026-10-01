@@ -60,17 +60,12 @@ paths:
                   notificationKey:
                     description: Identifier of the created message definition.
                     type: integer
+                required:
+                - notificationKey
                 type: object
           description: 'The definition was created. `notificationKey` is the identifier of the message
 
             definition, used in transactional message calls.
-
-
-            The key is returned as an integer here, but `sendNotification` requires it as a
-
-            string. Convert it before passing it on, or the call is rejected with Netmera
-
-            error code 2004.
 
             '
           x-netmera-verified: '2026-09-06'
@@ -268,13 +263,7 @@ components:
       additionalProperties: true
     NotificationDefinitionRequest:
       type: object
-      description: 'Transactional notification definition. The guide''s carousel and slider examples place
-
-        the same fields either at the root level or inside a `message` block, so additional root
-
-        properties are permitted.
-
-        '
+      description: Transactional notification definition.
       properties:
         title:
           type: string
@@ -290,13 +279,10 @@ components:
             message is sent to users.
 
             '
-          oneOf:
-          - type: string
-          - type: object
-            additionalProperties: true
+          type: string
         text:
           type: string
-          description: Notification text, used in the carousel and slider definition examples.
+          description: Notification text.
         personalizedMessage:
           type: string
           description: 'User-specific message using `@{xxxx}` placeholders. Placeholders can be profile
@@ -360,11 +346,9 @@ components:
       additionalProperties: true
     Platform:
       type: string
-      description: 'Target platform. Values documented in the Netmera Developer Guide are `IOS`,
+      description: 'Target platform, for example `IOS`, `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`,
 
-        `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`, `OPERA`, `YANDEX`, `MACOS`,
-
-        `EMAIL` and `SMS`. Push statistics responses additionally report `WP`.
+        `OPERA`, `YANDEX`, `MACOS`, `EMAIL` or `SMS`. Push statistics responses also report `WP`.
 
         '
       examples:
@@ -384,9 +368,7 @@ components:
       properties:
         setOnClick:
           type: string
-          description: '`PROFILE_ATTR` for the profile attribute flow. In the tag flow the guide''s examples
-
-            carry the attribute name in this field.
+          description: '`PROFILE_ATTR` for the profile attribute flow.
 
             '
         attrName:

@@ -56,11 +56,21 @@ paths:
         required: true
       responses:
         '200':
-          description: 'The notification was accepted. The response shows the `NotificationKey` of the
+          content:
+            application/json:
+              example:
+                notificationKey: 1000
+              schema:
+                properties:
+                  notificationKey:
+                    description: Identifier of the created push notification.
+                    type: integer
+                required:
+                - notificationKey
+                type: object
+          description: 'The notification was accepted. `notificationKey` is the identifier of the created
 
-            created push. Save this value to reference the notification later, for example as
-
-            `refID` in an Android live push update.
+            push notification.
 
             '
       summary: Send bulk notification
@@ -139,13 +149,6 @@ components:
         text:
           type: string
           description: The message content of the push notification displayed to the user.
-        message:
-          type: string
-          description: 'Additional message content used alongside `text` in the carousel and slider
-
-            examples of the Netmera Developer Guide.
-
-            '
         personalizedTitle:
           type: string
           description: 'When this field is provided and the corresponding profile attribute exists for
@@ -200,9 +203,7 @@ components:
           additionalProperties: true
         params:
           type: object
-          description: 'Message parameters. Used for example with `_nm_badge_count` to set the iOS badge
-
-            count.
+          description: 'Message parameters.
 
             '
           additionalProperties: true
@@ -273,33 +274,14 @@ components:
       additionalProperties: true
     BulkNotificationRequest:
       type: object
-      description: 'Bulk notification request. `message` and `target` are the canonical top-level blocks;
-
-        the carousel, slider and some web push examples in the Netmera Developer Guide place
-
-        message fields directly at the root level, so additional root properties are permitted.
-
-        '
+      description: Bulk notification request.
       properties:
         message:
-          description: 'Content and delivery options of the notification. In the guide''s carousel and
-            slider
-
-            examples the payload is flat — the message fields sit at the root level and `message`
-
-            itself carries a text value — so a plain string is also accepted here.
-
-            '
-          oneOf:
-          - $ref: '#/components/schemas/BulkMessage'
-          - type: string
+          $ref: '#/components/schemas/BulkMessage'
         target:
           $ref: '#/components/schemas/Target'
         languages:
           type: object
-          description: 'Per-language overrides of `title`, `text` and `click`, keyed by language name.
-
-            '
           additionalProperties:
             type: object
             properties:
@@ -322,7 +304,6 @@ components:
             your own system. Any ID may be assigned and queried by later.
 
             '
-      additionalProperties: true
     ButtonSet:
       type: object
       description: 'Button set attached to the notification. Button sets must first be created in the
@@ -467,11 +448,9 @@ components:
             '
     Platform:
       type: string
-      description: 'Target platform. Values documented in the Netmera Developer Guide are `IOS`,
+      description: 'Target platform, for example `IOS`, `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`,
 
-        `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`, `OPERA`, `YANDEX`, `MACOS`,
-
-        `EMAIL` and `SMS`. Push statistics responses additionally report `WP`.
+        `OPERA`, `YANDEX`, `MACOS`, `EMAIL` or `SMS`. Push statistics responses also report `WP`.
 
         '
       examples:
@@ -489,7 +468,6 @@ components:
           - '2024-02-01T15:30:00'
         localTimezone:
           type: boolean
-          description: Whether the start time is evaluated in the user's local timezone.
     SetAttrOrTagEntry:
       type: object
       description: 'Profile attribute or tag set when a button is clicked. The button click action must
@@ -503,9 +481,7 @@ components:
       properties:
         setOnClick:
           type: string
-          description: '`PROFILE_ATTR` for the profile attribute flow. In the tag flow the guide''s examples
-
-            carry the attribute name in this field.
+          description: '`PROFILE_ATTR` for the profile attribute flow.
 
             '
         attrName:
@@ -533,10 +509,8 @@ components:
       properties:
         intervalMins:
           type: integer
-          description: Interval between packages, in minutes.
         packageSize:
           type: integer
-          description: Number of notifications per package.
     Target:
       type: object
       description: 'Designated recipients of the notification. The target object cannot be empty — to

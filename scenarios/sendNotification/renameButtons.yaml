@@ -49,34 +49,7 @@ paths:
         required: true
       responses:
         '200':
-          content:
-            application/json:
-              example: {}
-              schema:
-                description: Empty object. The API returns no fields on success.
-                type: object
-          description: 'The notification was accepted for delivery. Returns an empty JSON object. No
-
-            message or delivery identifier is returned; use `getPushStats` or
-
-            `getPushResult` with the notification key to inspect delivery.
-
-            '
-          x-netmera-verified: '2026-09-06'
-        '400':
-          content:
-            application/json:
-              example:
-                code: 2004
-                error: Field 'notificationKey' should be a text
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          description: '`notificationKey` was sent as a number instead of a string, or another field
-
-            was sent with the wrong type.
-
-            '
-          x-netmera-verified: '2026-09-06'
+          description: The notification was accepted for delivery.
       summary: Send transactional notification
       tags:
       - Transactional Notifications
@@ -219,29 +192,6 @@ components:
           type: boolean
           description: Android only. No action is triggered when the user taps the notification.
       additionalProperties: true
-    ErrorResponse:
-      type: object
-      description: 'Application-level error envelope returned by the API.
-
-
-        Framework-level failures such as an unmatched route do not use this shape; they
-
-        return an RFC 9457 problem detail (`type`, `title`, `status`, `detail`, `instance`)
-
-        instead.
-
-        '
-      properties:
-        code:
-          type: integer
-          description: Netmera error code. See the error table in the API description.
-        error:
-          type: string
-          description: Human-readable explanation of the failure.
-      example:
-        code: 2004
-        error: Field 'notificationKey' should be a text
-      x-netmera-verified: '2026-09-06'
     IosOptions:
       type: object
       description: Optional parameters specific to iOS.
@@ -312,13 +262,6 @@ components:
 
             `createNotificationDefinition`.
 
-
-            The value must be sent as a **string**, even though
-
-            `createNotificationDefinition` returns it as an integer. Sending it as an integer
-
-            is rejected with Netmera error code 2004.
-
             '
         target:
           $ref: '#/components/schemas/Target'
@@ -343,9 +286,7 @@ components:
       properties:
         setOnClick:
           type: string
-          description: '`PROFILE_ATTR` for the profile attribute flow. In the tag flow the guide''s examples
-
-            carry the attribute name in this field.
+          description: '`PROFILE_ATTR` for the profile attribute flow.
 
             '
         attrName:

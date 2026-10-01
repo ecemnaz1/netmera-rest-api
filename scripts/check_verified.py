@@ -25,6 +25,15 @@ import yaml
 
 METHODS = ("get", "post", "put", "patch", "delete")
 
+# Verified responses removed on purpose: the spec carries only what the live
+# Developer Guide documents. See README, "The live Developer Guide is the source".
+RETIRED = {
+    ("sendNotification", "400"),
+    ("sendNotification", "200"),
+    ("sendEmailAndSms", "400"),
+    ("sendEmailAndSms", "200"),
+}
+
 
 def load(path):
     try:
@@ -81,6 +90,9 @@ def main():
     failures = []
     for key, had_content in before.items():
         op_id, status = key
+        if key in RETIRED and key not in now:
+            print(f"{op_id} ({status}) retired on purpose, see README.")
+            continue
         if key not in now:
             failures.append(
                 f"{op_id} ({status}) lost its x-netmera-verified marker. "
