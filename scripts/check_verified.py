@@ -25,12 +25,13 @@ import yaml
 
 METHODS = ("get", "post", "put", "patch", "delete")
 
-# Verified responses removed on purpose. Error responses are not documented on
-# operations; the observed failures are recorded in README under
-# "Observed endpoint errors".
+# Verified responses removed on purpose: the spec carries only what the live
+# Developer Guide documents. See README, "The live Developer Guide is the source".
 RETIRED = {
     ("sendNotification", "400"),
+    ("sendNotification", "200"),
     ("sendEmailAndSms", "400"),
+    ("sendEmailAndSms", "200"),
 }
 
 

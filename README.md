@@ -60,68 +60,56 @@ because operations document only their success responses. Neither is a defect to
 
 ## Conventions
 
-**The Developer Guide is authoritative for requests; the live API is authoritative
-for responses.** Request fields, parameter descriptions and payload examples come
-from the guide. Response bodies come from calling the endpoint and recording what
-came back.
+**The live Developer Guide is authoritative.** Request fields, parameter descriptions,
+payload examples and response samples come from the guide. Behaviour observed against
+the live API is not added unless the guide documents it; see "The live Developer Guide is
+the source" below.
 
 **Nothing is invented.** No enum asserts a list is complete unless the guide says
 so. No response schema is written for an endpoint whose response has not been seen.
 No field is marked required unless something says it is.
 
 **Operations document success responses only.** Error responses are not listed on
-operations. The full Netmera error code table lives once, in `info.description`, which
-GitBook publishes as the Error Responses page. Endpoint-specific failures that were
-observed are recorded under *Observed endpoint errors* below so the knowledge is kept
-without being published on operation pages.
+operations. The Netmera error code table lives once, in `info.description`.
 
 **`x-netmera-verified: <date>`** marks a response confirmed against the live API.
 It is invisible to readers and exists so a regeneration from the guide cannot
 silently replace confirmed behaviour with a guess. `scripts/check_verified.py`
 fails the build if a marker disappears.
 
-## Known divergences from the Developer Guide
+## The live Developer Guide is the source
 
-These are defects in the source documentation, recorded here so they are not
-"fixed" back into the spec by mistake:
+The spec carries only what the live Developer Guide documents. Anything else is left out,
+even when it was observed against the API, so the reference never says more than the
+guide. The one exception is the "Returns no response body" wording on write operations,
+which was confirmed against the live API and kept on purpose.
 
-- `smsIysMessageType` is required for SMS sends on `sendEmailAndSms`, but the guide
-  documents it as an ordinary optional field.
-- Error code 2004 is returned by the API but is absent from the guide's error table.
-- Unmatched routes return an RFC 9457 problem detail rather than the Netmera
-  `{code, error}` envelope, so two error shapes exist.
-- `getCategoryPreferences` is documented in the guide with a JSON body on a `GET`;
-  it is modelled here with query parameters.
-- The guide marks `target` as required for bulk notifications, but its carousel and slider
-  examples omit it. The guide marks `title`, `message` and `platforms` as required for
-  notification definitions, but its slider example has no top-level `title` or `platforms`.
-  The spec therefore does not mark these fields required at the top level; it keeps what the
-  guide says in the operation pages instead.
-- `sendEmailAndSms` has no field the guide marks as required, so the request schema has
-  no `required` list. `smsIysMessageType` is documented above as conditionally required.
+These were removed for that reason and must not be added back unless the guide adds them:
 
-## Observed endpoint errors
+- The `sendPushApproval` and `deleteProfileAttributeValue` operations.
+- The "Response bodies" section, the RFC 9457 error shape and error code 2004.
+- The `{}` body of `sendNotification`, the `notificationKey` body of `sendEmailAndSms`,
+  the `smsIysMessageType` / `smsIysRecipientType` requirement notes, and the note on
+  characters allowed in category names.
+- `required` on `sendEmailWithAttachment`, `addEmail`, `addMsisdn` and the `getPushStats`
+  response.
+- Descriptions inferred from examples (`schedule.localTimezone`, `speed`, `languages`,
+  `_nm_badge_count`, an array `tag` on `tagUsers` / `untagUsers`, WhatsApp addressing),
+  the plain-string `message` and extra root fields on bulk and definition requests, and
+  the `offset` parameter of `getPushResult`.
+- All error responses on operations.
 
-These were removed from the operation pages on purpose and are kept here for reference:
+The guide's carousel and slider examples put message fields at the root level, so Redocly
+reports them as not matching the schema. The examples are kept verbatim from the guide.
 
-| Operation | Failure | Response |
-| --- | --- | --- |
-| `sendNotification` | A field sent with the wrong type (verified live) | `{"code": 2004, "error": "Field 'notificationKey' should be a text"}` |
-| `sendEmailAndSms` | SMS send without `smsIysMessageType` (verified live) | `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}` |
-| `removeEmail`, `removeMsisdn`, `removeWhatsApp` | `extId` missing or `null`; no user is changed | `text/plain`: `Please provide an external id.` |
-| `registerUsers` | Every entry is invalid, or no registration was sent | not captured |
-| `targetingCount` | Invalid targeting query | not captured |
-| `targetingCountBatch` | `groupBy` missing or contains neither `profile` nor `installation` | not captured |
-| `sendPushApproval` | No message with the given `messageId` (error code 5003, from the guide's error table) | not captured |
-
-`scripts/check_verified.py` lists the two verified entries as intentionally retired, so the
-guard does not fail on them.
+The guide marks `target` as required for bulk notifications and `title`, `message` and
+`platforms` for notification definitions, but its own carousel and slider examples omit
+them, so these fields are not marked required at the top level.
 
 ## Still unverified
 
-Responses for `sendBulkNotification`, `sendPushApproval`, `sendEmailWithAttachment`,
-`sendBulkEmail`, `deleteProfileAttributes` and `deleteProfileAttributeValue` have not been
-captured. The Developer Guide shows the bulk response only as `NotificationKey: 1000`, so
+Responses for `sendBulkNotification`, `sendEmailWithAttachment`, `sendBulkEmail` and
+`deleteProfileAttributes` have not been captured. The Developer Guide shows the bulk response only as `NotificationKey: 1000`, so
 its body is left undocumented.
 They carry no response schema rather than a guessed one.
 

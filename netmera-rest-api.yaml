@@ -38,33 +38,11 @@ info:
     - If a custom parameter in a request differs from the parameter configured in the panel,
       the request value overwrites the panel value.
 
-    ## Response bodies
-
-    Read endpoints return the data they describe. Write endpoints do not follow a single
-    convention, so do not assume a JSON body on a successful write:
-
-    | Shape | When | Example endpoints |
-    | --- | --- | --- |
-    | No body at all | The call updated existing records | `enablePush`, `tagUsers`, `setProfileAttributes`, `addEmail` |
-    | An empty object, `{}` | The call was accepted and returns no fields | `sendNotification` |
-    | An object holding the new identifier | The call created a resource | `createNotificationDefinition` and `sendEmailAndSms` return `notificationKey`; `geofence/add` returns `id` |
-
-    Most write endpoints return no body, so a client that parses every response as JSON
-    will fail on the majority of them. Each operation states its own behavior below.
-
     ## Error responses
-
-    Application-level failures return a JSON body with a `code` and an `error` field, for
-    example `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}`.
-
-    Framework-level failures, such as a request to a path that does not exist, do not use
-    that shape. They return an RFC 9457 problem detail with `type`, `title`, `status`,
-    `detail` and `instance` fields instead.
 
     | Error | Netmera error code | HTTP response code |
     | --- | --- | --- |
     | Internal server error | 2001 | 500 |
-    | Field type mismatch | 2004 | 400 |
     | Invalid JSON | 2009 | 400 |
     | API key is invalid | 2010 | 403 |
     | Missing required parameter | 2020 | 400 |
@@ -167,8 +145,6 @@ tags:
       definitions via the API.
   - name: Push Statistics
     description: Retrieve aggregate notification statistics and per-user delivery results.
-  - name: Push Approval
-    description: Approve a previously created push message.
   - name: Email
     description: Send emails, trigger email templates, and manage email addresses and permissions.
   - name: SMS
@@ -1003,17 +979,7 @@ paths:
                     params: {}
       responses:
         '200':
-          description: |
-            The notification was accepted for delivery. Returns an empty JSON object. No
-            message or delivery identifier is returned; use `getPushStats` or
-            `getPushResult` with the notification key to inspect delivery.
-          content:
-            application/json:
-              schema:
-                type: object
-                description: Empty object. The API returns no fields on success.
-              example: {}
-          x-netmera-verified: '2026-09-06'
+          description: The notification was accepted for delivery.
 
   /rest/3.0/createNotificationDefinition:
     post:
@@ -1371,9 +1337,7 @@ paths:
           in: query
           required: false
           description: |
-            Notification ID on the panel. Filters results to the given notification. The guide
-            describes this parameter both as optional (filter) and as required for obtaining
-            users' responses for a message.
+            Notification ID on the panel. Filters results to the given notification.
           schema:
             type: string
           example: "106"
@@ -1414,15 +1378,6 @@ paths:
             type: integer
             format: int64
           example: 1557892431000
-        - name: offset
-          in: query
-          required: false
-          description: |
-            Pagination offset. Taken from the `nextPage` URL of a previous response rather than
-            constructed manually.
-          schema:
-            type: string
-          example: hJbolUuHucJ9dd
       responses:
         '200':
           description: A page of push results.
@@ -1449,33 +1404,6 @@ paths:
                     msgTitle: Awesome Title
                     msgText: How is it going, Jon?
 
-  /rest/3.0/sendPushApproval:
-    post:
-      operationId: sendPushApproval
-      tags: [Push Approval]
-      summary: Send push approval
-      description: |
-        Approves a previously created push message. The request is an array, and each entry
-        carries the `messageId` of the message to approve.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                required: [messageId]
-                properties:
-                  messageId:
-                    type: integer
-                    description: ID of the message to approve.
-            example:
-              - messageId: 0
-      responses:
-        '200':
-          description: The message was approved.
-
   /rest/3.0/sendEmailAndSms:
     post:
       operationId: sendEmailAndSms
@@ -1488,9 +1416,6 @@ paths:
 
         Set `platforms` to `["EMAIL"]` with `target.email`, or to `["SMS"]` with
         `target.msisdn`.
-
-        SMS sends additionally require `smsIysMessageType`. The field is not marked required
-        in the schema because it does not apply to email sends.
       requestBody:
         required: true
         content:
@@ -1546,22 +1471,7 @@ paths:
                   smsIysRecipientType: "B"
       responses:
         '200':
-          description: |
-            The message was accepted for delivery. The response returns the
-            `notificationKey` of the definition created for this send, in the same shape
-            as `createNotificationDefinition`.
-          content:
-            application/json:
-              schema:
-                type: object
-                required: [notificationKey]
-                properties:
-                  notificationKey:
-                    type: integer
-                    description: Identifier of the definition created for this send.
-              example:
-                notificationKey: 97
-          x-netmera-verified: '2026-09-06'
+          description: The message was accepted for delivery.
 
   /rest/3.0/sendEmailWithAttachment:
     post:
@@ -1580,19 +1490,14 @@ paths:
         `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`,
         `application/vnd.ms-excel`, `text/csv`, `xlsx`, `xls`, `csv`, `txt`, `pdf`, `jpg`,
         `jpeg`, `png`, `gif`, `mpeg`, `mpeg-2`, `mp4`, `avi`.
-
-        The guide documents this call against the host `https://netmera.com`, unlike the other
-        endpoints which use `https://restapi.netmera.com`.
       servers:
         - url: https://netmera.com
-          description: Host used for this endpoint in the Netmera Developer Guide.
       requestBody:
         required: true
         content:
           multipart/form-data:
             schema:
               type: object
-              required: [mailAttachment, to, notificationKey]
               properties:
                 mailAttachment:
                   type: string
@@ -1703,7 +1608,6 @@ paths:
           application/json:
             schema:
               type: object
-              required: [emailList]
               properties:
                 emailList:
                   type: array
@@ -1747,7 +1651,6 @@ paths:
           application/json:
             schema:
               type: object
-              required: [msisdnList]
               properties:
                 msisdnList:
                   type: array
@@ -1929,10 +1832,6 @@ paths:
                 summary: Delete one user
                 value:
                   extIds: [externalid]
-              byId:
-                summary: Delete by numeric external ID
-                value:
-                  extIds: ["123456"]
       responses:
         '200':
           description: |
@@ -2003,9 +1902,7 @@ paths:
       tags: [Tags]
       summary: Add tags to users
       description: |
-        Adds one or more tags to the specified users. `tag` accepts a single tag name or an array
-        of tag names, and `extIds` lists the external IDs of the users. Use `untagUsers` to
-        remove tags.
+        Adds one or more tags to the specified users.
       requestBody:
         required: true
         content:
@@ -2027,8 +1924,7 @@ paths:
       tags: [Tags]
       summary: Remove tags from users
       description: |
-        Removes a tag from the specified users. `tag` accepts a single tag name or an array of
-        tag names, and `extIds` lists the external IDs of the users. Use `tagUsers` to add tags.
+        Removes a tag from the specified users.
       requestBody:
         required: true
         content:
@@ -2129,10 +2025,6 @@ paths:
 
         The `categoryIds` and `channels` parameters are optional: omit them and the call
         behaves exactly as it did before channel-based preferences were introduced.
-
-        The Netmera Developer Guide documents `externalId` and `pushPermitted` as this
-        endpoint's parameters and shows them being passed as a JSON body on a GET request.
-        They are modelled here as query parameters.
       parameters:
         - name: externalId
           in: query
@@ -2188,10 +2080,15 @@ paths:
                 $ref: '#/components/schemas/CategoryPreferencesResponse'
               example:
                 categoryPreferences:
-                  Promotions: true
-                  Discounts: true
-                  Offers: true
-                  Newsletter: true
+                  Shopping: true
+                  Promotion: false
+                categoryChannelPreferences:
+                  Shopping:
+                    MOBILE: true
+                    EMAIL: false
+                  Promotion:
+                    MOBILE: false
+                    EMAIL: false
           x-netmera-verified: '2026-09-06'
 
   /rest/3.0/getProfileAttributes:
@@ -2422,35 +2319,6 @@ paths:
       responses:
         '200':
           description: The attributes were deleted.
-
-  /rest/3.0/deleteProfileAttributeValue:
-    post:
-      operationId: deleteProfileAttributeValue
-      tags: [Profile Attributes]
-      summary: Delete profile attribute value
-      description: Deletes a specific value from a profile attribute across all users.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                type: object
-                required: [key, value]
-                properties:
-                  key:
-                    type: string
-                    description: Attribute key.
-                  value:
-                    type: string
-                    description: Value to remove globally.
-            example:
-              - key: lastVisitedProducts
-                value: shirt
-      responses:
-        '200':
-          description: The value was deleted.
 
   /rest/3.0/getDevices:
     get:
@@ -2901,8 +2769,7 @@ paths:
       tags: [WhatsApp]
       summary: Enable WhatsApp permission
       description: |
-        Enables WhatsApp permission for one or more users. Users can be addressed by `extIds`
-        or by their WhatsApp numbers.
+        Enables WhatsApp permission for one or more users.
       requestBody:
         required: true
         content:
@@ -2924,8 +2791,7 @@ paths:
       tags: [WhatsApp]
       summary: Disable WhatsApp permission
       description: |
-        Disables WhatsApp permission for one or more users. Users can be addressed by `extIds`
-        or by their WhatsApp numbers.
+        Disables WhatsApp permission for one or more users.
       requestBody:
         required: true
         content:
@@ -3776,10 +3642,7 @@ components:
     CategoryPreferencesResponse:
       type: object
       description: |
-        Push category opt-in state for a single user. Category names are defined in the
-        Netmera panel and are used verbatim as object keys, so a key may contain spaces,
-        punctuation, trailing whitespace or non-ASCII characters. The set of keys is
-        therefore app-specific and open-ended.
+        Category opt-in state for a single user.
       properties:
         categoryPreferences:
           type: object
@@ -3802,9 +3665,8 @@ components:
     Platform:
       type: string
       description: |
-        Target platform. Values documented in the Netmera Developer Guide are `IOS`,
-        `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`, `OPERA`, `YANDEX`, `MACOS`,
-        `EMAIL` and `SMS`. Push statistics responses additionally report `WP`.
+        Target platform, for example `IOS`, `ANDROID`, `CHROME`, `FIREFOX`, `SAFARI`, `EDGE`,
+        `OPERA`, `YANDEX`, `MACOS`, `EMAIL` or `SMS`. Push statistics responses also report `WP`.
       examples: [IOS, ANDROID, CHROME]
 
     ClickAction:
@@ -3953,8 +3815,7 @@ components:
         setOnClick:
           type: string
           description: |
-            `PROFILE_ATTR` for the profile attribute flow. In the tag flow the guide's examples
-            carry the attribute name in this field.
+            `PROFILE_ATTR` for the profile attribute flow.
         attrName:
           type: string
           description: Profile attribute name.
@@ -4106,7 +3967,6 @@ components:
           examples: ["2024-02-01T15:30:00"]
         localTimezone:
           type: boolean
-          description: Whether the start time is evaluated in the user's local timezone.
 
     Speed:
       type: object
@@ -4114,10 +3974,8 @@ components:
       properties:
         intervalMins:
           type: integer
-          description: Interval between packages, in minutes.
         packageSize:
           type: integer
-          description: Number of notifications per package.
 
     Hook:
       type: object
@@ -4148,11 +4006,6 @@ components:
         text:
           type: string
           description: The message content of the push notification displayed to the user.
-        message:
-          type: string
-          description: |
-            Additional message content used alongside `text` in the carousel and slider
-            examples of the Netmera Developer Guide.
         personalizedTitle:
           type: string
           description: |
@@ -4191,8 +4044,7 @@ components:
         params:
           type: object
           description: |
-            Message parameters. Used for example with `_nm_badge_count` to set the iOS badge
-            count.
+            Message parameters.
           additionalProperties: true
         click:
           $ref: '#/components/schemas/ClickAction'
@@ -4247,25 +4099,14 @@ components:
 
     BulkNotificationRequest:
       type: object
-      description: |
-        Bulk notification request. `message` and `target` are the canonical top-level blocks;
-        the carousel, slider and some web push examples in the Netmera Developer Guide place
-        message fields directly at the root level, so additional root properties are permitted.
+      description: Bulk notification request.
       properties:
         message:
-          description: |
-            Content and delivery options of the notification. In the guide's carousel and slider
-            examples the payload is flat — the message fields sit at the root level and `message`
-            itself carries a text value — so a plain string is also accepted here.
-          oneOf:
-            - $ref: '#/components/schemas/BulkMessage'
-            - type: string
+          $ref: '#/components/schemas/BulkMessage'
         target:
           $ref: '#/components/schemas/Target'
         languages:
           type: object
-          description: |
-            Per-language overrides of `title`, `text` and `click`, keyed by language name.
           additionalProperties:
             type: object
             properties:
@@ -4285,7 +4126,6 @@ components:
           description: |
             External reference of the push notification — an identifier of the notification in
             your own system. Any ID may be assigned and queried by later.
-      additionalProperties: true
 
     TransactionalMessage:
       type: object
@@ -4347,10 +4187,7 @@ components:
 
     NotificationDefinitionRequest:
       type: object
-      description: |
-        Transactional notification definition. The guide's carousel and slider examples place
-        the same fields either at the root level or inside a `message` block, so additional root
-        properties are permitted.
+      description: Transactional notification definition.
       properties:
         title:
           type: string
@@ -4361,13 +4198,10 @@ components:
           description: |
             The default push notification message. If no personalized message is used, this
             message is sent to users.
-          oneOf:
-            - type: string
-            - type: object
-              additionalProperties: true
+          type: string
         text:
           type: string
-          description: Notification text, used in the carousel and slider definition examples.
+          description: Notification text.
         personalizedMessage:
           type: string
           description: |
@@ -4457,16 +4291,10 @@ components:
           type: string
           description: |
             `"N"` for Notification, `"C"` for Campaign.
-
-            Required when `platforms` is `["SMS"]`. Omitting it on an SMS send is rejected
-            with Netmera error code 2004 and the message
-            "Please add smsIysMessageType parameter into request!".
         smsIysRecipientType:
           type: string
           description: |
             `"B"` for Personal, `"T"` for Trader.
-
-            Not required — an SMS send succeeds without it, unlike `smsIysMessageType`.
       additionalProperties: true
 
     Event:
@@ -4505,12 +4333,8 @@ components:
       required: [tag, extIds]
       properties:
         tag:
-          description: Tag name, or an array of tag names.
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                type: string
+          type: string
+          description: Tag name.
         extIds:
           type: array
           description: External user IDs.
@@ -4555,10 +4379,7 @@ components:
 
     WhatsAppPermissionRequest:
       type: object
-      anyOf:
-        - required: [extIds]
-        - required: [wpNumbers]
-      description: WhatsApp permission change by external user IDs or WhatsApp numbers.
+      description: WhatsApp permission change.
       properties:
         extIds:
           type: array
@@ -4597,7 +4418,6 @@ components:
 
     PushStatsByKeyResponse:
       type: object
-      required: [notificationKey]
       properties:
         notificationKey:
           type: integer

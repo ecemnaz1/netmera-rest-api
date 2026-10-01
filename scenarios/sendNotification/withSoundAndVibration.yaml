@@ -46,20 +46,7 @@ paths:
         required: true
       responses:
         '200':
-          content:
-            application/json:
-              example: {}
-              schema:
-                description: Empty object. The API returns no fields on success.
-                type: object
-          description: 'The notification was accepted for delivery. Returns an empty JSON object. No
-
-            message or delivery identifier is returned; use `getPushStats` or
-
-            `getPushResult` with the notification key to inspect delivery.
-
-            '
-          x-netmera-verified: '2026-09-06'
+          description: The notification was accepted for delivery.
       summary: Send transactional notification
       tags:
       - Transactional Notifications
@@ -296,9 +283,7 @@ components:
       properties:
         setOnClick:
           type: string
-          description: '`PROFILE_ATTR` for the profile attribute flow. In the tag flow the guide''s examples
-
-            carry the attribute name in this field.
+          description: '`PROFILE_ATTR` for the profile attribute flow.
 
             '
         attrName:
