@@ -56,8 +56,7 @@ cannot read a source that sits behind a login.
 
 The lint step is expected to report warnings and still pass. `info-license` is expected
 because the source documentation states no license. `operation-4xx-response` is expected
-because error responses are documented only where the specific failure is known, never
-added generically. Neither is a defect to fix.
+because operations document only their success responses. Neither is a defect to fix.
 
 ## Conventions
 
@@ -70,10 +69,11 @@ came back.
 so. No response schema is written for an endpoint whose response has not been seen.
 No field is marked required unless something says it is.
 
-**Errors are documented where they are known, not generically.** Operations do not
-carry a boilerplate set of 400/401/403/500 responses. An error appears on an
-operation when that specific failure has been observed or is documented for that
-endpoint. The full Netmera error code table lives once, in `info.description`.
+**Operations document success responses only.** Error responses are not listed on
+operations. The full Netmera error code table lives once, in `info.description`, which
+GitBook publishes as the Error Responses page. Endpoint-specific failures that were
+observed are recorded under *Observed endpoint errors* below so the knowledge is kept
+without being published on operation pages.
 
 **`x-netmera-verified: <date>`** marks a response confirmed against the live API.
 It is invisible to readers and exists so a regeneration from the guide cannot
@@ -99,6 +99,23 @@ These are defects in the source documentation, recorded here so they are not
   guide says in the operation pages instead.
 - `sendEmailAndSms` has no field the guide marks as required, so the request schema has
   no `required` list. `smsIysMessageType` is documented above as conditionally required.
+
+## Observed endpoint errors
+
+These were removed from the operation pages on purpose and are kept here for reference:
+
+| Operation | Failure | Response |
+| --- | --- | --- |
+| `sendNotification` | A field sent with the wrong type (verified live) | `{"code": 2004, "error": "Field 'notificationKey' should be a text"}` |
+| `sendEmailAndSms` | SMS send without `smsIysMessageType` (verified live) | `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}` |
+| `removeEmail`, `removeMsisdn`, `removeWhatsApp` | `extId` missing or `null`; no user is changed | `text/plain`: `Please provide an external id.` |
+| `registerUsers` | Every entry is invalid, or no registration was sent | not captured |
+| `targetingCount` | Invalid targeting query | not captured |
+| `targetingCountBatch` | `groupBy` missing or contains neither `profile` nor `installation` | not captured |
+| `sendPushApproval` | No message with the given `messageId` (error code 5003, from the guide's error table) | not captured |
+
+`scripts/check_verified.py` lists the two verified entries as intentionally retired, so the
+guard does not fail on them.
 
 ## Still unverified
 

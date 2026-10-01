@@ -54,16 +54,6 @@ paths:
 
             '
           x-netmera-verified: '2026-09-06'
-        '400':
-          content:
-            application/json:
-              example:
-                code: 2004
-                error: Field 'notificationKey' should be a text
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-          description: A field was sent with the wrong type.
-          x-netmera-verified: '2026-09-06'
       summary: Send transactional notification
       tags:
       - Transactional Notifications
@@ -206,29 +196,6 @@ components:
           type: boolean
           description: Android only. No action is triggered when the user taps the notification.
       additionalProperties: true
-    ErrorResponse:
-      type: object
-      description: 'Application-level error envelope returned by the API.
-
-
-        Framework-level failures such as an unmatched route do not use this shape; they
-
-        return an RFC 9457 problem detail (`type`, `title`, `status`, `detail`, `instance`)
-
-        instead.
-
-        '
-      properties:
-        code:
-          type: integer
-          description: Netmera error code. See the error table in the API description.
-        error:
-          type: string
-          description: Human-readable explanation of the failure.
-      example:
-        code: 2004
-        error: Please add smsIysMessageType parameter into request!
-      x-netmera-verified: '2026-09-06'
     IosOptions:
       type: object
       description: Optional parameters specific to iOS.

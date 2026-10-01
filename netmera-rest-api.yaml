@@ -55,8 +55,7 @@ info:
     ## Error responses
 
     Application-level failures return a JSON body with a `code` and an `error` field, for
-    example `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}`. This shape
-    is modelled as the `ErrorResponse` schema.
+    example `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}`.
 
     Framework-level failures, such as a request to a path that does not exist, do not use
     that shape. They return an RFC 9457 problem detail with `type`, `title`, `status`,
@@ -1015,16 +1014,6 @@ paths:
                 description: Empty object. The API returns no fields on success.
               example: {}
           x-netmera-verified: '2026-09-06'
-        '400':
-          description: A field was sent with the wrong type.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                code: 2004
-                error: Field 'notificationKey' should be a text
-          x-netmera-verified: '2026-09-06'
 
   /rest/3.0/createNotificationDefinition:
     post:
@@ -1486,10 +1475,6 @@ paths:
       responses:
         '200':
           description: The message was approved.
-        '400':
-          description: |
-            No message exists with the given `messageId`. Netmera error code 5003.
-            Documented in the Netmera Developer Guide; not verified against the live API.
 
   /rest/3.0/sendEmailAndSms:
     post:
@@ -1576,17 +1561,6 @@ paths:
                     description: Identifier of the definition created for this send.
               example:
                 notificationKey: 97
-          x-netmera-verified: '2026-09-06'
-        '400':
-          description: |
-            A required field is missing. On SMS sends, `smsIysMessageType` must be present.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorResponse'
-              example:
-                code: 2004
-                error: Please add smsIysMessageType parameter into request!
           x-netmera-verified: '2026-09-06'
 
   /rest/3.0/sendEmailWithAttachment:
@@ -2853,14 +2827,6 @@ paths:
         '200':
           description: |
             The request was queued. Returns no response body.
-        '400':
-          description: |
-            `extId` is missing or `null`. No user is changed.
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: Please provide an external id.
 
   /rest/3.0/updateMsisdn:
     post:
@@ -2928,14 +2894,6 @@ paths:
         '200':
           description: |
             The request was queued. Returns no response body.
-        '400':
-          description: |
-            `extId` is missing or `null`. No user is changed.
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: Please provide an external id.
 
   /rest/3.0/enableWhatsApp:
     post:
@@ -3050,14 +3008,6 @@ paths:
         '200':
           description: |
             The request was queued. Returns no response body.
-        '400':
-          description: |
-            `extId` is missing or `null`. No user is changed.
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: Please provide an external id.
 
   /rest/3.0/targeting/count:
     post:
@@ -3160,8 +3110,6 @@ paths:
                     description: Total number of unique users matching the target.
               example:
                 count: 184523
-        '400':
-          description: Invalid targeting query.
 
   /rest/3.0/targeting/count-batch:
     post:
@@ -3251,9 +3199,6 @@ paths:
                   "352481": 184523
                   "15": 9210
                   "23": 4487
-        '400':
-          description: |
-            `groupBy` is missing or contains neither `profile` nor `installation`.
 
   /rest/3.0/registerUsers:
     post:
@@ -3327,8 +3272,6 @@ paths:
       responses:
         '200':
           description: The registrations were accepted for processing.
-        '400':
-          description: Every entry is invalid, or no registration was sent.
 
   /rest/3.0/deleteUsers:
     post:
@@ -3830,26 +3773,6 @@ components:
         REST API key. Available in the Netmera Panel under Developers > API.
 
   schemas:
-    ErrorResponse:
-      type: object
-      description: |
-        Application-level error envelope returned by the API.
-
-        Framework-level failures such as an unmatched route do not use this shape; they
-        return an RFC 9457 problem detail (`type`, `title`, `status`, `detail`, `instance`)
-        instead.
-      properties:
-        code:
-          type: integer
-          description: Netmera error code. See the error table in the API description.
-        error:
-          type: string
-          description: Human-readable explanation of the failure.
-      example:
-        code: 2004
-        error: Please add smsIysMessageType parameter into request!
-      x-netmera-verified: '2026-09-06'
-
     CategoryPreferencesResponse:
       type: object
       description: |
