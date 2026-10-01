@@ -7,13 +7,9 @@ on:
       - "netmera-rest-api.yaml"
       - ".github/workflows/validate-openapi.yml"
       - "scripts/check_verified.py"
-      - "scripts/split_scenarios.py"
-      - "scenarios/**"
   pull_request:
     paths:
       - "netmera-rest-api.yaml"
-      - "scripts/split_scenarios.py"
-      - "scenarios/**"
   workflow_dispatch:
 
 jobs:
@@ -63,8 +59,3 @@ jobs:
           else
             python3 scripts/check_verified.py netmera-rest-api.yaml
           fi
-
-      - name: Check generated scenario files are current
-        # scenarios/ is derived from netmera-rest-api.yaml. If this fails, run
-        # `python3 scripts/split_scenarios.py` and commit the result.
-        run: python3 scripts/split_scenarios.py --check

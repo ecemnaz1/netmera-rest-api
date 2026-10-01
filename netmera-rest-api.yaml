@@ -216,7 +216,7 @@ paths:
               $ref: '#/components/schemas/BulkNotificationRequest'
             examples:
               minimal:
-                summary: Minimal required parameters
+                summary: "Content: Minimal required parameters"
                 value:
                   message:
                     title: Push Notification Title
@@ -225,7 +225,7 @@ paths:
                   target:
                     sendToAll: true
               platformTitles:
-                summary: Platform-specific titles
+                summary: "Content: Platform-specific titles"
                 value:
                   message:
                     title: New Product Launch
@@ -237,8 +237,53 @@ paths:
                       title: Discover Now!
                   target:
                     sendToAll: true
+              multilanguage:
+                summary: "Content: Multilanguage"
+                value:
+                  message:
+                    title: New Update Available
+                    platforms: [IOS, ANDROID]
+                    text: Explore exciting features in the latest update!
+                    customJson:
+                      key1: value1
+                    click:
+                      deeplink: https://www.netmera.com
+                  languages:
+                    English:
+                      title: New Features
+                      text: Discover what is new in this update.
+                      click:
+                        deeplink: https://www.netmera.com
+                    Turkish:
+                      title: Yeni Özellikler
+                      text: Bu güncellemede neler yeni öğrenin.
+                      click:
+                        deeplink: https://www.netmera.com
+                  target:
+                    sendToAll: true
+              personalized:
+                summary: "Content: Personalized push"
+                value:
+                  message:
+                    title: Special Offer
+                    platforms: [IOS, ANDROID]
+                    text: "Hello, [Name] [Surname]! Check out our exclusive special offer."
+                    personalizedMessage: "@{name}, @{surname}"
+                  target:
+                    sendToAll: true
+              withCustomParameters:
+                summary: "Content: With custom parameters"
+                value:
+                  message:
+                    title: Special Notification
+                    platforms: [IOS, ANDROID]
+                    text: This is a notification with custom JSON data
+                    customJson:
+                      key: value
+                  target:
+                    sendToAll: true
               carousel:
-                summary: Carousel push
+                summary: "Content: Carousel push"
                 value:
                   platforms: [ANDROID, IOS]
                   text: Explore our Products
@@ -275,7 +320,7 @@ paths:
                           deeplinkType: URL
                           deepLinkUrl: https://example.com/deeplink/toppicks
               slider:
-                summary: Slider push
+                summary: "Content: Slider push"
                 value:
                   platforms: [ANDROID, IOS]
                   text: Exciting News!
@@ -297,32 +342,28 @@ paths:
                         clickAction:
                           url: https://www.example.com
                       - itemImageUrl: https://example.com/android_image2.png
-              multilanguage:
-                summary: Multilanguage
+              withRichMedia:
+                summary: "Content: With rich media"
                 value:
                   message:
-                    title: New Update Available
+                    title: Special Notification
                     platforms: [IOS, ANDROID]
-                    text: Explore exciting features in the latest update!
-                    customJson:
-                      key1: value1
-                    click:
-                      deeplink: https://www.netmera.com
-                  languages:
-                    English:
-                      title: New Features
-                      text: Discover what is new in this update.
-                      click:
-                        deeplink: https://www.netmera.com
-                    Turkish:
-                      title: Yeni Özellikler
-                      text: Bu güncellemede neler yeni öğrenin.
-                      click:
-                        deeplink: https://www.netmera.com
+                    text: This is a notification with media content
+                    ios:
+                      mediaUrl: https://media.example.com/ios_image.jpg
+                      title: iOS Title
+                      subtitle: iOS Subtitle
+                      thumbnailUrl: https://media.example.com/ios_thumbnail.jpg
+                    android:
+                      mediaUrl: https://media.example.com/android_image.jpg
+                      title: Android Title
+                      subtitle: Android Subtitle
+                      bigText: Big Text for Android
+                      thumbnailUrl: https://media.example.com/android_thumbnail.jpg
                   target:
                     sendToAll: true
               customButton:
-                summary: Custom button (Android)
+                summary: "Content: Custom button (Android)"
                 value:
                   message:
                     title: New Offer Alert
@@ -335,7 +376,7 @@ paths:
                   target:
                     sendToAll: true
               buttonSetProfileAttribute:
-                summary: Set profile attribute with button set
+                summary: "Content: Set profile attribute with button set"
                 value:
                   message:
                     title: New Offer Alert
@@ -355,7 +396,7 @@ paths:
                   target:
                     sendToAll: true
               buttonSetTag:
-                summary: Set tag with button set
+                summary: "Content: Set tag with button set"
                 value:
                   message:
                     title: New Offer Alert
@@ -372,71 +413,8 @@ paths:
                           tagName: Barcelona Fans
                   target:
                     sendToAll: true
-              androidLivePushUpdate:
-                summary: Android live push update
-                value:
-                  message:
-                    title: Push Notification Title
-                    platforms: [ANDROID]
-                    text: This is the push notification text!
-                    customJson:
-                      refID: "1000"
-                  target:
-                    sendToAll: true
-              androidLivePushUpdateWithSound:
-                summary: Android live push update with sound
-                value:
-                  message:
-                    title: Push Notification Title
-                    platforms: [ANDROID]
-                    text: This is the push notification text!
-                    android:
-                      sound: default
-                    customJson:
-                      refID: notification_id
-                  target:
-                    sendToAll: true
-              notificationGrouping:
-                summary: Notification grouping with threadId
-                value:
-                  message:
-                    title: Match Update
-                    platforms: [ANDROID, IOS]
-                    text: Goal! Your team has scored.
-                    threadId: matchUpdates
-                  target:
-                    sendToAll: true
-              webPush:
-                summary: Web bulk notification
-                value:
-                  message:
-                    title: Important Update
-                    personalizedTitle: "@{titleHere}"
-                    platforms: [CHROME, MACOS, FIREFOX]
-                    text: Please review the latest changes.
-                    wpChromeImage: <image-url>
-                    interactionRequired: true
-                    click:
-                      url: https://www.netmera.com
-                    iconUrl: <icon-url>
-                  target:
-                    sendToAll: true
-              webPushCustomButton:
-                summary: Web bulk notification with custom button
-                value:
-                  message:
-                    title: New Features Announcement
-                    platforms: [CHROME]
-                    text: Exciting updates just for you!
-                    iconUrl: https://netmera.com/img/cropped_logo.png
-                    buttonSet:
-                      id: 1
-                      "Yes": https://netmera.com/yes-feedback
-                      "No": https://netmera.com/no-feedback
-                  target:
-                    sendToAll: true
               targetSingleTag:
-                summary: Target a tag
+                summary: "Targeting: Target a tag"
                 value:
                   message:
                     title: Sports Update
@@ -445,7 +423,7 @@ paths:
                   target:
                     tag: Sport
               targetMultipleTags:
-                summary: Target multiple tags (OR)
+                summary: "Targeting: Target multiple tags (OR)"
                 value:
                   message:
                     title: Updates for You
@@ -454,7 +432,7 @@ paths:
                   target:
                     tag: [Sport, Casual]
               targetTagsOr:
-                summary: Target multiple tags (explicit $or)
+                summary: "Targeting: Target multiple tags (explicit $or)"
                 value:
                   message:
                     title: Personalized Updates
@@ -464,7 +442,7 @@ paths:
                     tag:
                       $or: [Sport, Casual]
               targetTagsAnd:
-                summary: Target multiple tags (AND)
+                summary: "Targeting: Target multiple tags (AND)"
                 value:
                   message:
                     title: Exclusive Sports & Casual Updates
@@ -474,7 +452,7 @@ paths:
                     tag:
                       $and: [Sport, Casual]
               targetTagsNot:
-                summary: Target multiple tags (NOT)
+                summary: "Targeting: Target multiple tags (NOT)"
                 value:
                   message:
                     title: General Updates
@@ -484,7 +462,7 @@ paths:
                     tag:
                       $not: [Sport, Casual]
               targetProfileOr:
-                summary: Target profile attributes with $or and $exists
+                summary: "Targeting: Target profile attributes with $or and $exists"
                 value:
                   message:
                     title: Special Announcement
@@ -498,7 +476,7 @@ paths:
                       name:
                         $exists: true
               targetSegment:
-                summary: Target a segment
+                summary: "Targeting: Target a segment"
                 value:
                   message:
                     title: Exclusive Offer
@@ -507,7 +485,7 @@ paths:
                   target:
                     segment: frequent_users
               targetSegments:
-                summary: Target multiple segments (OR)
+                summary: "Targeting: Target multiple segments (OR)"
                 value:
                   message:
                     title: Special Announcement
@@ -516,7 +494,7 @@ paths:
                   target:
                     segment: [frequent_users, churn]
               targetSegmentsOr:
-                summary: Target multiple segments (explicit $or)
+                summary: "Targeting: Target multiple segments (explicit $or)"
                 value:
                   message:
                     title: Special Announcement
@@ -525,18 +503,8 @@ paths:
                   target:
                     segment:
                       $or: [frequent_users, churn]
-              targetSegmentsNot:
-                summary: Target multiple segments (NOT)
-                value:
-                  message:
-                    title: Latest News
-                    platforms: [IOS, ANDROID]
-                    text: Stay updated with the latest news and announcements.
-                  target:
-                    segment:
-                      $not: [frequent_users, churn]
               targetSegmentsAnd:
-                summary: Target multiple segments (AND)
+                summary: "Targeting: Target multiple segments (AND)"
                 value:
                   message:
                     title: Important Update
@@ -545,8 +513,18 @@ paths:
                   target:
                     segment:
                       $and: [frequent_users, churn]
+              targetSegmentsNot:
+                summary: "Targeting: Target multiple segments (NOT)"
+                value:
+                  message:
+                    title: Latest News
+                    platforms: [IOS, ANDROID]
+                    text: Stay updated with the latest news and announcements.
+                  target:
+                    segment:
+                      $not: [frequent_users, churn]
               targetProfileAttribute:
-                summary: Target profile attributes
+                summary: "Targeting: Target profile attributes"
                 value:
                   message:
                     title: Special Offer
@@ -557,7 +535,7 @@ paths:
                       language: [English, Turkish]
                       name: John
               targetArrayAttribute:
-                summary: Target array-type profile attributes
+                summary: "Targeting: Target array-type profile attributes"
                 value:
                   message:
                     title: Push Notification Title
@@ -567,18 +545,8 @@ paths:
                     profile:
                       arrayTest: [extSegment4, extSegment5]
                       kvkkTest: true
-              personalized:
-                summary: Personalized push
-                value:
-                  message:
-                    title: Special Offer
-                    platforms: [IOS, ANDROID]
-                    text: "Hello, [Name] [Surname]! Check out our exclusive special offer."
-                    personalizedMessage: "@{name}, @{surname}"
-                  target:
-                    sendToAll: true
               targetLocation:
-                summary: Target a specific location
+                summary: "Targeting: Target a specific location"
                 value:
                   message:
                     title: Special Offer in Your Area
@@ -590,7 +558,7 @@ paths:
                       longitude: 21.355
                       radius: 50
               withCategories:
-                summary: With categories
+                summary: "Delivery: With categories"
                 value:
                   message:
                     title: Special Announcement
@@ -600,7 +568,7 @@ paths:
                   target:
                     sendToAll: true
               withSoundAndVibration:
-                summary: With sound and vibration
+                summary: "Delivery: With sound and vibration"
                 value:
                   message:
                     title: Special Announcement
@@ -617,7 +585,7 @@ paths:
                   target:
                     sendToAll: true
               withBadge:
-                summary: With badge (iOS only)
+                summary: "Delivery: With badge (iOS only)"
                 value:
                   message:
                     title: Special Alert
@@ -628,7 +596,7 @@ paths:
                   target:
                     sendToAll: true
               withDeeplink:
-                summary: With deeplink
+                summary: "Delivery: With deeplink"
                 value:
                   message:
                     title: Special Offer
@@ -641,7 +609,7 @@ paths:
                   target:
                     sendToAll: true
               withUrl:
-                summary: With URL
+                summary: "Delivery: With URL"
                 value:
                   message:
                     title: Special Offer
@@ -654,7 +622,7 @@ paths:
                   target:
                     sendToAll: true
               withDoNothing:
-                summary: With "Do Nothing" (Android only)
+                summary: "Delivery: With \"Do Nothing\" (Android only)"
                 value:
                   message:
                     title: Special Notification
@@ -666,39 +634,27 @@ paths:
                       doNothing: true
                   target:
                     sendToAll: true
-              withRichMedia:
-                summary: With rich media
+              platformSpecificClick:
+                summary: "Delivery: Platform-specific click actions"
                 value:
                   message:
-                    title: Special Notification
+                    title: New Feature!
+                    text: Discover platform-specific experience
                     platforms: [IOS, ANDROID]
-                    text: This is a notification with media content
+                    click:
+                      url: https://www.example.com/default
                     ios:
-                      mediaUrl: https://media.example.com/ios_image.jpg
-                      title: iOS Title
-                      subtitle: iOS Subtitle
-                      thumbnailUrl: https://media.example.com/ios_thumbnail.jpg
+                      title: iOS Special
+                      click:
+                        url: https://www.example.com/ios
                     android:
-                      mediaUrl: https://media.example.com/android_image.jpg
-                      title: Android Title
-                      subtitle: Android Subtitle
-                      bigText: Big Text for Android
-                      thumbnailUrl: https://media.example.com/android_thumbnail.jpg
-                  target:
-                    sendToAll: true
-              withCustomParameters:
-                summary: With custom parameters
-                value:
-                  message:
-                    title: Special Notification
-                    platforms: [IOS, ANDROID]
-                    text: This is a notification with custom JSON data
-                    customJson:
-                      key: value
+                      title: Android Special
+                      click:
+                        deeplink: https://www.example.com/android
                   target:
                     sendToAll: true
               scheduled:
-                summary: Scheduled notification
+                summary: "Delivery: Scheduled notification"
                 value:
                   message:
                     title: Scheduled Push
@@ -710,7 +666,7 @@ paths:
                     startTime: "2024-02-01T15:30:00"
                     localTimezone: false
               inPackages:
-                summary: Send in packages (speed control)
+                summary: "Delivery: Send in packages (speed control)"
                 value:
                   message:
                     title: Push title
@@ -722,7 +678,7 @@ paths:
                     intervalMins: 5
                     packageSize: 10000
               otherParameters:
-                summary: Other parameters (extRef, limit, ttl, inbox, doNotNotify)
+                summary: "Delivery: Other parameters (extRef, limit, ttl, inbox, doNotNotify)"
                 value:
                   extRef: 1h63af
                   message:
@@ -739,23 +695,67 @@ paths:
                     doNotNotify: false
                   target:
                     sendToAll: true
-              platformSpecificClick:
-                summary: Platform-specific click actions
+              notificationGrouping:
+                summary: "Delivery: Notification grouping with threadId"
                 value:
                   message:
-                    title: New Feature!
-                    text: Discover platform-specific experience
-                    platforms: [IOS, ANDROID]
-                    click:
-                      url: https://www.example.com/default
-                    ios:
-                      title: iOS Special
-                      click:
-                        url: https://www.example.com/ios
+                    title: Match Update
+                    platforms: [ANDROID, IOS]
+                    text: Goal! Your team has scored.
+                    threadId: matchUpdates
+                  target:
+                    sendToAll: true
+              androidLivePushUpdate:
+                summary: "Delivery: Android live push update"
+                value:
+                  message:
+                    title: Push Notification Title
+                    platforms: [ANDROID]
+                    text: This is the push notification text!
+                    customJson:
+                      refID: "1000"
+                  target:
+                    sendToAll: true
+              androidLivePushUpdateWithSound:
+                summary: "Delivery: Android live push update with sound"
+                value:
+                  message:
+                    title: Push Notification Title
+                    platforms: [ANDROID]
+                    text: This is the push notification text!
                     android:
-                      title: Android Special
-                      click:
-                        deeplink: https://www.example.com/android
+                      sound: default
+                    customJson:
+                      refID: notification_id
+                  target:
+                    sendToAll: true
+              webPush:
+                summary: "Web push: Web bulk notification"
+                value:
+                  message:
+                    title: Important Update
+                    personalizedTitle: "@{titleHere}"
+                    platforms: [CHROME, MACOS, FIREFOX]
+                    text: Please review the latest changes.
+                    wpChromeImage: <image-url>
+                    interactionRequired: true
+                    click:
+                      url: https://www.netmera.com
+                    iconUrl: <icon-url>
+                  target:
+                    sendToAll: true
+              webPushCustomButton:
+                summary: "Web push: Web bulk notification with custom button"
+                value:
+                  message:
+                    title: New Features Announcement
+                    platforms: [CHROME]
+                    text: Exciting updates just for you!
+                    iconUrl: https://netmera.com/img/cropped_logo.png
+                    buttonSet:
+                      id: 1
+                      "Yes": https://netmera.com/yes-feedback
+                      "No": https://netmera.com/no-feedback
                   target:
                     sendToAll: true
       responses:
@@ -794,7 +794,7 @@ paths:
                     $ref: '#/components/schemas/SendNotificationRequest'
             examples:
               single:
-                summary: Single request by external ID
+                summary: "Targets: Single request by external ID"
                 value:
                   notificationKey: "106"
                   message:
@@ -803,7 +803,7 @@ paths:
                   target:
                     extId: user_id_in_your_system
               singleDeviceToken:
-                summary: Single request by device token
+                summary: "Targets: Single request by device token"
                 value:
                   notificationKey: "106"
                   message:
@@ -811,8 +811,18 @@ paths:
                       name: John Doe
                   target:
                     deviceToken: APAaxpo02......12pxa
+              lastActiveDevice:
+                summary: "Targets: To last active device"
+                value:
+                  notificationKey: "2071"
+                  lastActiveDevice: true
+                  message:
+                    params:
+                      name: John
+                  target:
+                    extId: "123123123"
               chunksDifferent:
-                summary: In chunks — different notifications or parameters
+                summary: "Targets: In chunks — different notifications or parameters"
                 value:
                   - notificationKey: "106"
                     message:
@@ -827,7 +837,7 @@ paths:
                     target:
                       extId: user_id_in_your_system_2
               chunksDifferentTokens:
-                summary: In chunks with device tokens — different notifications or parameters
+                summary: "Targets: In chunks with device tokens — different notifications or parameters"
                 value:
                   - notificationKey: "106"
                     message:
@@ -842,7 +852,7 @@ paths:
                     target:
                       deviceToken: APAaxpo02......21kde
               chunksSame:
-                summary: In chunks — same notification and parameters
+                summary: "Targets: In chunks — same notification and parameters"
                 value:
                   notificationKey: "106"
                   message:
@@ -851,7 +861,7 @@ paths:
                   target:
                     extId: [user_id_in_your_system_1, user_id_in_your_system_2]
               chunksSameTokens:
-                summary: In chunks with device tokens — same notification and parameters
+                summary: "Targets: In chunks with device tokens — same notification and parameters"
                 value:
                   notificationKey: "106"
                   message:
@@ -859,8 +869,22 @@ paths:
                       name: John Doe
                   target:
                     deviceToken: [APAaxpo02......21kde, APAaxpo02......32coa]
+              profileAttributeTarget:
+                summary: "Targets: Target by profile attribute"
+                value:
+                  notificationKey: "1000"
+                  target:
+                    pa:
+                      pb: Smith
+              profileAttributeMultiple:
+                summary: "Targets: Target by multiple profile attribute values"
+                value:
+                  notificationKey: "1000"
+                  target:
+                    pa:
+                      pb: [Smith, Johnson]
               badgeCount:
-                summary: With badge count
+                summary: "Content: With badge count"
                 value:
                   notificationKey: "15107"
                   message:
@@ -869,7 +893,7 @@ paths:
                   target:
                     extId: your_xid
               withDeeplink:
-                summary: With deeplink
+                summary: "Content: With deeplink"
                 value:
                   notificationKey: "3"
                   target:
@@ -879,7 +903,7 @@ paths:
                     click:
                       deeplink: https://www.google.com
               withUrl:
-                summary: With URL
+                summary: "Content: With URL"
                 value:
                   notificationKey: "3"
                   target:
@@ -889,7 +913,7 @@ paths:
                     click:
                       url: https://www.netmera.com
               withRichMedia:
-                summary: With rich media
+                summary: "Content: With rich media"
                 value:
                   notificationKey: "3"
                   target:
@@ -908,7 +932,7 @@ paths:
                       bigText: Android Big Text
                       thumbnailUrl: https://example.com/thumbnail-android.png
               withSoundAndVibration:
-                summary: With sound and vibration
+                summary: "Content: With sound and vibration"
                 value:
                   notificationKey: "3"
                   target:
@@ -921,7 +945,7 @@ paths:
                       vibration: true
                       sound: custom_android_sound
               withCustomParameters:
-                summary: With custom parameters
+                summary: "Content: With custom parameters"
                 value:
                   notificationKey: "4"
                   target:
@@ -931,7 +955,7 @@ paths:
                     customJson:
                       key: custom_value
               otherParameters:
-                summary: Other parameters (ttl, inbox, doNotNotify)
+                summary: "Content: Other parameters (ttl, inbox, doNotNotify)"
                 value:
                   notificationKey: "4"
                   target:
@@ -941,32 +965,8 @@ paths:
                     ttl: 15d
                     inbox: true
                     doNotNotify: false
-              lastActiveDevice:
-                summary: To last active device
-                value:
-                  notificationKey: "2071"
-                  lastActiveDevice: true
-                  message:
-                    params:
-                      name: John
-                  target:
-                    extId: "123123123"
-              profileAttributeTarget:
-                summary: Target by profile attribute
-                value:
-                  notificationKey: "1000"
-                  target:
-                    pa:
-                      pb: Smith
-              profileAttributeMultiple:
-                summary: Target by multiple profile attribute values
-                value:
-                  notificationKey: "1000"
-                  target:
-                    pa:
-                      pb: [Smith, Johnson]
               renameButtons:
-                summary: Rename button set buttons
+                summary: "Content: Rename button set buttons"
                 value:
                   notificationKey: "1000"
                   target:
@@ -980,7 +980,7 @@ paths:
                       15 GB-10 USD: https://www.google.com
                       15 GB-15 USD: https://www.youtube.com
               webTransactional:
-                summary: Web transactional push
+                summary: "Web, email and SMS: Web transactional push"
                 value:
                   notificationKey: "2071"
                   target:
@@ -988,7 +988,7 @@ paths:
                   message:
                     params: {}
               webTransactionalDeeplink:
-                summary: Web transactional push with deeplink
+                summary: "Web, email and SMS: Web transactional push with deeplink"
                 value:
                   notificationKey: "1408"
                   target:
@@ -998,7 +998,7 @@ paths:
                     click:
                       deeplink: https://www.netmera.com?id=5&name=@{exid}&cat=webpush
               email:
-                summary: Email by notification key
+                summary: "Web, email and SMS: Email by notification key"
                 value:
                   notificationKey: "12"
                   target:
@@ -1006,7 +1006,7 @@ paths:
                   message:
                     params: {}
               sms:
-                summary: SMS by notification key
+                summary: "Web, email and SMS: SMS by notification key"
                 value:
                   notificationKey: "3964"
                   target:
@@ -1053,7 +1053,7 @@ paths:
               $ref: '#/components/schemas/NotificationDefinitionRequest'
             examples:
               full:
-                summary: Definition with platform blocks and hook
+                summary: "Definition with platform blocks and hook"
                 value:
                   title: New Campaign
                   message: Exciting updates await you!
@@ -1083,7 +1083,7 @@ paths:
                       key1: val1
                       key2: val2
               personalizedSubtext:
-                summary: Personalized message and subtext
+                summary: "Personalized message and subtext"
                 value:
                   title: New Announcement
                   message: Discover our latest updates!
@@ -1114,7 +1114,7 @@ paths:
                       key1: val1
                       key2: val2
               buttonSet:
-                summary: With a button set
+                summary: "With a button set"
                 value:
                   title: Important Survey
                   message: We would love to hear your feedback!
@@ -1127,7 +1127,7 @@ paths:
                     "Yes": https://netmera.com/yes-feedback
                     "No": https://netmera.com/no-feedback
               buttonSetProfileAttribute:
-                summary: Set profile attribute with button set
+                summary: "Set profile attribute with button set"
                 value:
                   title: Important Survey
                   message: We would love to hear your feedback!
@@ -1147,7 +1147,7 @@ paths:
                         attrName: Favorite Team
                         attrValue: Barcelona
               buttonSetTag:
-                summary: Set tag with button set
+                summary: "Set tag with button set"
                 value:
                   title: Important Survey
                   message: We would love to hear your feedback!
@@ -1165,7 +1165,7 @@ paths:
                         setOnClick: Favorite Team
                         tagName: Barcelona Fans
               renameButtons:
-                summary: Rename button set buttons
+                summary: "Rename button set buttons"
                 value:
                   title: Important Survey
                   message: We would like to get a feedback
@@ -1181,7 +1181,7 @@ paths:
                     15 GB-10 USD: https://www.google.com
                     15 GB-15 USD: https://www.youtube.com
               carousel:
-                summary: Carousel push definition
+                summary: "Carousel push definition"
                 value:
                   platforms: [ANDROID, IOS]
                   text: Explore our Products
@@ -1218,7 +1218,7 @@ paths:
                           deeplinkType: URL
                           deepLinkUrl: https://example.com/deeplink/toppicks
               slider:
-                summary: Slider push definition
+                summary: "Slider push definition"
                 value:
                   message:
                     platforms: [ANDROID, IOS]
@@ -1242,7 +1242,7 @@ paths:
                             url: https://www.netmera.com
                         - itemImageUrl: https://example.com/android-image2.png
               webTransactional:
-                summary: Web transactional push definition
+                summary: "Web transactional push definition"
                 value:
                   title: New Announcement
                   personalizedTitle: "@{titleHere}"
