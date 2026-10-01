@@ -85,9 +85,6 @@ fails the build if a marker disappears.
 These are defects in the source documentation, recorded here so they are not
 "fixed" back into the spec by mistake:
 
-- `sendNotification` requires `notificationKey` as a **string**, while
-  `createNotificationDefinition` returns it as an **integer**. Sending an integer
-  fails with error code 2004.
 - `smsIysMessageType` is required for SMS sends on `sendEmailAndSms`, but the guide
   documents it as an ordinary optional field.
 - Error code 2004 is returned by the API but is absent from the guide's error table.
@@ -108,7 +105,7 @@ These are defects in the source documentation, recorded here so they are not
 Responses for `sendBulkNotification`, `sendPushApproval`, `sendEmailWithAttachment`,
 `sendBulkEmail`, `deleteProfileAttributes` and `deleteProfileAttributeValue` have not been
 captured. The Developer Guide shows the bulk response only as `NotificationKey: 1000`, so
-its field name and type are left undocumented.
+its body is left undocumented.
 They carry no response schema rather than a guessed one.
 
 ## Open questions for Netmera engineering

@@ -55,17 +55,12 @@ paths:
                   notificationKey:
                     description: Identifier of the created message definition.
                     type: integer
+                required:
+                - notificationKey
                 type: object
           description: 'The definition was created. `notificationKey` is the identifier of the message
 
             definition, used in transactional message calls.
-
-
-            The key is returned as an integer here, but `sendNotification` requires it as a
-
-            string. Convert it before passing it on, or the call is rejected with Netmera
-
-            error code 2004.
 
             '
           x-netmera-verified: '2026-09-06'

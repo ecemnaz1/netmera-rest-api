@@ -74,11 +74,7 @@ paths:
                 error: Field 'notificationKey' should be a text
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
-          description: '`notificationKey` was sent as a number instead of a string, or another field
-
-            was sent with the wrong type.
-
-            '
+          description: A field was sent with the wrong type.
           x-netmera-verified: '2026-09-06'
       summary: Send transactional notification
       tags:
@@ -243,7 +239,7 @@ components:
           description: Human-readable explanation of the failure.
       example:
         code: 2004
-        error: Field 'notificationKey' should be a text
+        error: Please add smsIysMessageType parameter into request!
       x-netmera-verified: '2026-09-06'
     IosOptions:
       type: object
@@ -314,13 +310,6 @@ components:
             notification key is created in, and obtained from, the panel, or returned by
 
             `createNotificationDefinition`.
-
-
-            The value must be sent as a **string**, even though
-
-            `createNotificationDefinition` returns it as an integer. Sending it as an integer
-
-            is rejected with Netmera error code 2004.
 
             '
         target:

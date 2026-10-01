@@ -55,7 +55,7 @@ info:
     ## Error responses
 
     Application-level failures return a JSON body with a `code` and an `error` field, for
-    example `{"code": 2004, "error": "Field 'notificationKey' should be a text"}`. This shape
+    example `{"code": 2004, "error": "Please add smsIysMessageType parameter into request!"}`. This shape
     is modelled as the `ErrorResponse` schema.
 
     Framework-level failures, such as a request to a path that does not exist, do not use
@@ -1016,9 +1016,7 @@ paths:
               example: {}
           x-netmera-verified: '2026-09-06'
         '400':
-          description: |
-            `notificationKey` was sent as a number instead of a string, or another field
-            was sent with the wrong type.
+          description: A field was sent with the wrong type.
           content:
             application/json:
               schema:
@@ -1245,14 +1243,11 @@ paths:
           description: |
             The definition was created. `notificationKey` is the identifier of the message
             definition, used in transactional message calls.
-
-            The key is returned as an integer here, but `sendNotification` requires it as a
-            string. Convert it before passing it on, or the call is rejected with Netmera
-            error code 2004.
           content:
             application/json:
               schema:
                 type: object
+                required: [notificationKey]
                 properties:
                   notificationKey:
                     type: integer
@@ -1574,6 +1569,7 @@ paths:
             application/json:
               schema:
                 type: object
+                required: [notificationKey]
                 properties:
                   notificationKey:
                     type: integer
@@ -3851,7 +3847,7 @@ components:
           description: Human-readable explanation of the failure.
       example:
         code: 2004
-        error: Field 'notificationKey' should be a text
+        error: Please add smsIysMessageType parameter into request!
       x-netmera-verified: '2026-09-06'
 
     CategoryPreferencesResponse:
@@ -4416,10 +4412,6 @@ components:
             Key identifier of the specific notification definition intended for a user. The
             notification key is created in, and obtained from, the panel, or returned by
             `createNotificationDefinition`.
-
-            The value must be sent as a **string**, even though
-            `createNotificationDefinition` returns it as an integer. Sending it as an integer
-            is rejected with Netmera error code 2004.
         target:
           $ref: '#/components/schemas/Target'
         message:
@@ -4682,6 +4674,7 @@ components:
 
     PushStatsByKeyResponse:
       type: object
+      required: [notificationKey]
       properties:
         notificationKey:
           type: integer
