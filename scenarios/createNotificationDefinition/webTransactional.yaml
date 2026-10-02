@@ -8,10 +8,10 @@ servers:
 security:
 - NetmeraApiKey: []
 tags:
-- name: Transactional Notifications
-  description: 'Send pre-configured notification definitions to individual users, and create those
+- name: Push Notifications
+  description: 'Send push notifications to an audience or to individual users, and create the
 
-    definitions via the API.
+    notification definitions used for transactional sends.
 
     '
 paths:
@@ -65,7 +65,7 @@ paths:
           x-netmera-verified: '2026-09-06'
       summary: Create notification definition
       tags:
-      - Transactional Notifications
+      - Push Notifications
 components:
   securitySchemes:
     NetmeraApiKey:

@@ -8,12 +8,10 @@ servers:
 security:
 - NetmeraApiKey: []
 tags:
-- name: Bulk Notifications
-  description: 'Send push notifications to an audience defined by tags, segments, profile attributes,
+- name: Push Notifications
+  description: 'Send push notifications to an audience or to individual users, and create the
 
-    location or all users. Covers mobile and web push, rich media, carousel, slider,
-
-    multilanguage, custom buttons, scheduling and speed control.
+    notification definitions used for transactional sends.
 
     '
 paths:
@@ -67,7 +65,7 @@ paths:
             '
       summary: Send bulk notification
       tags:
-      - Bulk Notifications
+      - Push Notifications
 components:
   securitySchemes:
     NetmeraApiKey:

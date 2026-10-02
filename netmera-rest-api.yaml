@@ -134,53 +134,68 @@ security:
   - NetmeraApiKey: []
 
 tags:
-  - name: Bulk Notifications
+  - name: Push Notifications
     description: |
-      Send push notifications to an audience defined by tags, segments, profile attributes,
-      location or all users. Covers mobile and web push, rich media, carousel, slider,
-      multilanguage, custom buttons, scheduling and speed control.
-  - name: Transactional Notifications
+      Send push notifications to an audience or to individual users, and create the
+      notification definitions used for transactional sends.
+  - name: Email and SMS
     description: |
-      Send pre-configured notification definitions to individual users, and create those
-      definitions via the API.
-  - name: Push Statistics
-    description: Retrieve aggregate notification statistics and per-user delivery results.
-  - name: Email
-    description: Send emails, trigger email templates, and manage email addresses and permissions.
-  - name: SMS
-    description: Send SMS messages and manage MSISDNs and SMS permissions.
-  - name: WhatsApp
-    description: Manage WhatsApp permissions and numbers.
+      Send emails and SMS messages, with the content in the request or from a template.
+  - name: Reports
+    description: |
+      Read notification statistics and per-user delivery results.
   - name: Events
-    description: Fire custom events associated with a specific user.
+    description: |
+      Fire custom events associated with a specific user.
   - name: Users
-    description: User registration, deletion, push permission management and user counts.
-  - name: Tags
-    description: Add and remove tags on users.
-  - name: Categories
-    description: List message categories and read and write category-based opt-in preferences.
-  - name: Profile Attributes
-    description: Read, set, unset, append to and delete user profile attributes.
+    description: |
+      Register and delete users.
   - name: Devices
-    description: Retrieve a user's devices, page through all device tokens and register test devices.
-  - name: Segments
-    description: List segments and the users inside a segment.
-  - name: Targeting
-    description: Count the unique users matching a targeting query.
+    description: |
+      Retrieve a user's devices, page through all device tokens and register test devices.
+  - name: Push Permission
+    description: |
+      Enable or disable push notifications for a user or a device.
+  - name: Email
+    description: |
+      Add email addresses, manage email permission and update or remove a user's email address.
+  - name: SMS
+    description: |
+      Add phone numbers, manage SMS permission and update or remove a user's phone number.
+  - name: WhatsApp
+    description: |
+      Manage WhatsApp permissions and numbers.
+  - name: Tags
+    description: |
+      Add and remove tags on users.
+  - name: Profile Attributes
+    description: |
+      Read, set, unset, append to and delete user profile attributes.
+  - name: Category Preferences
+    description: |
+      Read and write a user's message category preferences.
+  - name: Promotion Codes
+    description: |
+      Assign promotion codes to users.
+  - name: Segments and Targeting
+    description: |
+      List segments and their users, and count the users matching a target.
   - name: Geofence
-    description: Create and remove geofences via the REST API.
-  - name: Promotions
-    description: Assign promotion codes to users.
-  - name: Application Data
-    description: Read-only definitions of the profile attributes and events configured for the application.
+    description: |
+      Create and remove geofences.
   - name: Inbox
-    description: Fetch, display and manage push notifications stored on the server.
+    description: |
+      Fetch, display and manage push notifications stored on the server.
+  - name: Application Data
+    description: |
+      Read-only definitions configured for the application: profile attributes, events and
+      message categories.
 
 paths:
   /rest/3.0/sendBulkNotification:
     post:
       operationId: sendBulkNotification
-      tags: [Bulk Notifications]
+      tags: [Push Notifications]
       summary: Send bulk notification
       description: Sends a push notification to a target audience.
       requestBody:
@@ -753,7 +768,7 @@ paths:
   /rest/3.0/sendNotification:
     post:
       operationId: sendNotification
-      tags: [Transactional Notifications]
+      tags: [Push Notifications]
       summary: Send transactional notification
       description: Sends a pre-configured notification definition to individual users. The definition is referenced by its `notificationKey`.
       requestBody:
@@ -994,7 +1009,7 @@ paths:
   /rest/3.0/createNotificationDefinition:
     post:
       operationId: createNotificationDefinition
-      tags: [Transactional Notifications]
+      tags: [Push Notifications]
       summary: Create notification definition
       description: Creates a transactional notification definition. The returned `notificationKey` is used in later `sendNotification` calls.
       requestBody:
@@ -1224,7 +1239,7 @@ paths:
   /rest/3.0/getPushStats:
     get:
       operationId: getPushStats
-      tags: [Push Statistics]
+      tags: [Reports]
       summary: Get push statistics
       description: |
         Returns notification statistics, either for a single notification key or for every
@@ -1326,7 +1341,7 @@ paths:
   /rest/3.0/getPushResult:
     get:
       operationId: getPushResult
-      tags: [Push Statistics]
+      tags: [Reports]
       summary: Get push results
       description: |
         Retrieves per-user push results (success or failure). If `start` and `end` are not
@@ -1417,7 +1432,7 @@ paths:
   /rest/3.0/sendEmailAndSms:
     post:
       operationId: sendEmailAndSms
-      tags: [Email, SMS]
+      tags: [Email and SMS]
       summary: Send email or SMS
       description: |
         Sends an email or an SMS, including the message content in the request instead of
@@ -1486,7 +1501,7 @@ paths:
   /rest/3.0/sendEmailWithAttachment:
     post:
       operationId: sendEmailWithAttachment
-      tags: [Email]
+      tags: [Email and SMS]
       summary: Send email with attachment
       description: |
         Sends an email with one or more attachments, referencing a notification key created in
@@ -1528,7 +1543,7 @@ paths:
   /rest/3.0/sendBulkEmail:
     post:
       operationId: sendBulkEmail
-      tags: [Email]
+      tags: [Email and SMS]
       summary: Send bulk email
       description: |
         Triggers an email template created in the Netmera panel by referencing its template ID.
@@ -1851,7 +1866,7 @@ paths:
   /rest/3.0/enablePush:
     post:
       operationId: enablePush
-      tags: [Users]
+      tags: [Push Permission]
       summary: Enable push permission
       description: |
         Opts in all devices of a user, or one specific device, for push notifications.
@@ -1880,7 +1895,7 @@ paths:
   /rest/3.0/disablePush:
     post:
       operationId: disablePush
-      tags: [Users]
+      tags: [Push Permission]
       summary: Disable push permission
       description: |
         Opts out all devices of a user, or one specific device, from receiving push
@@ -1953,7 +1968,7 @@ paths:
   /rest/3.0/setCategoryPreferences:
     post:
       operationId: setCategoryPreferences
-      tags: [Categories]
+      tags: [Category Preferences]
       summary: Set category preferences
       description: |
         Enables or disables category-specific opt-in preferences for a user.
@@ -2027,7 +2042,7 @@ paths:
   /rest/3.0/getCategoryPreferences:
     get:
       operationId: getCategoryPreferences
-      tags: [Categories]
+      tags: [Category Preferences]
       summary: Get category preferences
       description: |
         Retrieves category-based opt-in preferences for a specific user, with a per-channel
@@ -2432,7 +2447,7 @@ paths:
   /rest/3.0/getSegments:
     get:
       operationId: getSegments
-      tags: [Segments]
+      tags: [Segments and Targeting]
       summary: Get segments
       description: |
         Lists all segments defined in the panel. The platform is selected with the
@@ -2477,7 +2492,7 @@ paths:
   /rest/3.0/getSegmentUsers:
     get:
       operationId: getSegmentUsers
-      tags: [Segments]
+      tags: [Segments and Targeting]
       summary: Get segment users
       description: |
         Fetches the users in the segment given by the `id` query parameter. The platform is
@@ -2888,7 +2903,7 @@ paths:
   /rest/3.0/targeting/count:
     post:
       operationId: targetingCount
-      tags: [Targeting]
+      tags: [Segments and Targeting]
       summary: Count targeted users
       description: |
         Returns the number of unique users whose profiles match a targeting query. It enables
@@ -2990,7 +3005,7 @@ paths:
   /rest/3.0/targeting/count-batch:
     post:
       operationId: targetingCountBatch
-      tags: [Targeting]
+      tags: [Segments and Targeting]
       summary: Count users per attribute value
       description: |
         Returns the distinct user count for every value of one profile or installation
@@ -3223,7 +3238,7 @@ paths:
   /rest/3.0/count-user:
     get:
       operationId: countUsers
-      tags: [Users]
+      tags: [Segments and Targeting]
       summary: Count users with push permission
       description: |
         Returns the number of users in your application that currently have push permission.
@@ -3245,7 +3260,7 @@ paths:
   /rest/3.0/promotion/add:
     post:
       operationId: addPromotionCodes
-      tags: [Promotions]
+      tags: [Promotion Codes]
       summary: Assign promotion codes
       description: |
         Assigns promotion codes to users. All codes in one request belong to the same promotion,
@@ -3451,7 +3466,7 @@ paths:
   /rest/3.0/getPushCategories:
     get:
       operationId: getPushCategories
-      tags: [Categories]
+      tags: [Application Data]
       summary: List push categories
       description: |
         Lists the message categories defined for your application under Settings > Message
