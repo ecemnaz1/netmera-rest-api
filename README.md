@@ -69,8 +69,11 @@ the source" below.
 so. No response schema is written for an endpoint whose response has not been seen.
 No field is marked required unless something says it is.
 
-**Operations document success responses only.** Error responses are not listed on
-operations. The Netmera error code table lives once, in `info.description`.
+**Error responses are documented only where the product team documents them.** Most
+operations list success responses only, and the Netmera error code table lives once, in
+`info.description`. The segment operations, `sendBulkEmail` and `sendBulkNotification`
+list the 400 rejections documented with the segment management release. They carry a
+description only, because the error body was not documented.
 
 **`x-netmera-verified: <date>`** marks a response confirmed against the live API.
 It is invisible to readers and exists so a regeneration from the guide cannot
@@ -106,10 +109,27 @@ The guide marks `target` as required for bulk notifications and `title`, `messag
 `platforms` for notification definitions, but its own carousel and slider examples omit
 them, so these fields are not marked required at the top level.
 
+## Segment management
+
+`createSegment`, `getSegment`, `updateSegment` and `changeSegmentStatus`, the segment
+check on `sendBulkEmail` and `sendBulkNotification`, and the `sendBulkEmail` additions
+(`target`, `emailIysMessageType`, the rejected requests, `nm_campid` on links, the
+`customParams.body` rule and the `notificationKey` response) come from the release
+documentation of the product team and were tested on production. Error codes are given
+only where the documented error matches a row of the error code table (5022, 5025, 5041,
+5042).
+
+`sendToAll` is no longer required on `sendBulkEmail`, because a request with
+`target.segment` or `target.tag` is accepted without it. The top-level `sendToAll` of the
+guide's example is kept.
+
+The scheduled send of `sendBulkEmail` (`msgSchedule`) is not documented, because the
+format of `startDate` was not confirmed.
+
 ## Still unverified
 
-Responses for `sendEmailWithAttachment`, `sendBulkEmail` and `deleteProfileAttributes`
-have not been captured. The `sendBulkNotification` response has the same
+Responses for `sendEmailWithAttachment` and `deleteProfileAttributes` have not been
+captured. The `sendBulkNotification` response has the same
 `{"notificationKey": <integer>}` shape as `createNotificationDefinition`, as confirmed by
 the product team; it has not been captured live, so it carries no `x-netmera-verified`
 marker.
@@ -121,5 +141,5 @@ These cannot be answered from the guide or the spec and are left undocumented ra
 guessed: rate limits, request size and timeout limits, field length limits, what the REST
 API key is authorized to do, which endpoints return 404, differences between test and
 production environments, side effects of removing a channel on segment membership and
-message category permissions, and the responses of the five operations listed above plus
+message category permissions, and the responses of the operations listed above plus
 `registerUsers`, `deleteUsers`, `addTesters` and `addPromotionCodes`.

@@ -17,7 +17,35 @@ tags:
 paths:
   /rest/3.0/sendBulkNotification:
     post:
-      description: Sends a push notification to a target audience.
+      description: 'Sends a push notification to a target audience.
+
+
+        When `target.segment` names a segment, the segment is checked before the campaign is
+
+        created:
+
+
+        | Segment state | Result |
+
+        | --- | --- |
+
+        | `ACTIVE` and `READY` | Accepted |
+
+        | `ACTIVE`, `WAITING_CALCULATE`, and calculated before (`userCount` has a value) | Accepted. The
+        earlier user list is used while the segment is calculated again. |
+
+        | `ACTIVE`, `WAITING_CALCULATE`, and never calculated | Rejected with HTTP 400 |
+
+        | `DELETED`, `WAITING_DELETED`, or no segment with that name | Rejected with HTTP 400 |
+
+
+        When `target.segment` is a list, the request is rejected if one segment of the list
+
+        fails the check. Follow a new segment with `getSegment` and send when its
+
+        `segmentStatus` is `READY`.
+
+        '
       operationId: sendBulkNotification
       requestBody:
         content:
@@ -63,6 +91,11 @@ paths:
             push notification.
 
             '
+        '400':
+          description: "The target segment is not usable. No campaign is created.\n\n- `Segment '<name>'\
+            \ is not active`: the segment is deleted or does not exist.\n- `Segment '<name>' is still\
+            \ being calculated; retry when its segmentStatus is READY`:\n  the segment has never been\
+            \ calculated.\n"
       summary: Send bulk notification
       tags:
       - Push Notifications
