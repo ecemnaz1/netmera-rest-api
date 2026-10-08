@@ -179,7 +179,8 @@ tags:
       Assign promotion codes to users.
   - name: Segments and Targeting
     description: |
-      List segments and their users, and count the users matching a target.
+      Create, update, delete and reopen segments, follow their calculation, list segments and
+      their users, and count the users matching a target.
   - name: Geofence
     description: |
       Create and remove geofences.
@@ -197,7 +198,22 @@ paths:
       operationId: sendBulkNotification
       tags: [Push Notifications]
       summary: Send bulk notification
-      description: Sends a push notification to a target audience.
+      description: |
+        Sends a push notification to a target audience.
+
+        When `target.segment` names a segment, the segment is checked before the campaign is
+        created:
+
+        | Segment state | Result |
+        | --- | --- |
+        | `ACTIVE` and `READY` | Accepted |
+        | `ACTIVE`, `WAITING_CALCULATE`, and calculated before (`userCount` has a value) | Accepted. The earlier user list is used while the segment is calculated again. |
+        | `ACTIVE`, `WAITING_CALCULATE`, and never calculated | Rejected with HTTP 400 |
+        | `DELETED`, `WAITING_DELETED`, or no segment with that name | Rejected with HTTP 400 |
+
+        When `target.segment` is a list, the request is rejected if one segment of the list
+        fails the check. Follow a new segment with `getSegment` and send when its
+        `segmentStatus` is `READY`.
       requestBody:
         required: true
         content:
@@ -764,6 +780,13 @@ paths:
                     description: Identifier of the created push notification.
               example:
                 notificationKey: 1000
+        '400':
+          description: |
+            The target segment is not usable. No campaign is created.
+
+            - `Segment '<name>' is not active`: the segment is deleted or does not exist.
+            - `Segment '<name>' is still being calculated; retry when its segmentStatus is READY`:
+              the segment has never been calculated.
 
   /rest/3.0/sendNotification:
     post:
@@ -1566,6 +1589,38 @@ paths:
         or `{PDF_URL}`. Provide matching keys in `customParams`, and Netmera replaces each
         placeholder with the corresponding value at send time.
 
+        A template whose HTML is a skeleton such as `<html><body>@{body}</body></html>` takes a
+        different HTML body in every send through `customParams.body`. Put only the content of
+        the body in `customParams.body`. A full HTML document (`<html><head>…`) ends up nested
+        inside the template.
+
+        Every link in the template, and in the HTML that arrives through `customParams`, gets
+        an `nm_campid` parameter, so clicks appear in the campaign report.
+
+        ### Target
+
+        `target` takes only one of `segment`, `tag` or `sendToAll`. A segment is referenced by
+        its name.
+
+        The target segment is checked before the campaign is created:
+
+        | Segment state | Result |
+        | --- | --- |
+        | `ACTIVE` and `READY` | Accepted |
+        | `ACTIVE`, `WAITING_CALCULATE`, and calculated before (`userCount` has a value) | Accepted. The earlier user list is used while the segment is calculated again. |
+        | `ACTIVE`, `WAITING_CALCULATE`, and never calculated | Rejected with HTTP 400 |
+        | `DELETED`, `WAITING_DELETED`, or no segment with that name | Rejected with HTTP 400 |
+
+        When `target.segment` is a list, the request is rejected if one segment of the list
+        fails the check.
+
+        ### Recipients
+
+        | `emailIysMessageType` | Recipients |
+        | --- | --- |
+        | `C`, or not sent | Users who have email permission |
+        | `N` | Users who have an email address and are not in the suppression list or the blacklist |
+
         ### Notes
 
         - If a placeholder exists in the template but no matching key is provided in
@@ -1578,34 +1633,103 @@ paths:
           application/json:
             schema:
               type: object
-              required: [emailTemplateId, subject, sendToAll]
+              required: [emailTemplateId, subject]
               properties:
                 emailTemplateId:
                   type: integer
                   description: The ID of the email template to trigger.
                 subject:
                   type: string
-                  description: The email subject line for this send request.
+                  description: |
+                    The email subject line for this send request. HTML tags and line breaks
+                    are not allowed.
                 customParams:
                   type: object
                   description: |
                     Key-value pairs that map to placeholders defined in the template.
                   additionalProperties: true
+                emailIysMessageType:
+                  type: string
+                  description: |
+                    Selects the recipients. `C`, or leaving the field out, sends only to users
+                    who have email permission. `N` sends to every user who has an email address
+                    and is not in the suppression list or the blacklist.
+                target:
+                  type: object
+                  description: |
+                    Recipients of the email. Set only one of `segment`, `tag` or `sendToAll`.
+                  properties:
+                    segment:
+                      $ref: '#/components/schemas/TargetOperatorList'
+                    tag:
+                      $ref: '#/components/schemas/TargetOperatorList'
+                    sendToAll:
+                      type: boolean
+                      description: Set to true to send to all users.
                 sendToAll:
                   type: boolean
                   description: Set to true to send to all users.
-            example:
-              emailTemplateId: 5
-              subject: Daily Bulletin - May 15
-              customParams:
-                DATE: 16.05.2026
-                TITLE: Market Summary
-                CONTENT: BIST 100 increased today.
-                PDF_URL: https://cdn.example.com/report.pdf
-              sendToAll: true
+            examples:
+              sendToAll:
+                summary: Send to all users
+                value:
+                  emailTemplateId: 5
+                  subject: Daily Bulletin - May 15
+                  customParams:
+                    DATE: 16.05.2026
+                    TITLE: Market Summary
+                    CONTENT: BIST 100 increased today.
+                    PDF_URL: https://cdn.example.com/report.pdf
+                  sendToAll: true
+              segment:
+                summary: Send to a segment
+                value:
+                  emailTemplateId: 5
+                  subject: Daily Bulletin
+                  emailIysMessageType: C
+                  customParams:
+                    TITLE: Market Summary
+                  target:
+                    segment: Email contains example
+              dynamicBody:
+                summary: Send a dynamic HTML body to a segment
+                value:
+                  emailTemplateId: 5
+                  subject: Weekly Newsletter
+                  emailIysMessageType: C
+                  customParams:
+                    body: <h2>Hello!</h2><p><a href="https://www.netmera.com">Netmera</a></p>
+                  target:
+                    segment: Email contains example
       responses:
         '200':
-          description: The bulk email was accepted for delivery.
+          description: |
+            The bulk email was accepted for delivery. `notificationKey` is the ID of the email
+            campaign created in the panel for this send.
+          x-netmera-verified: '2026-10-08'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [notificationKey]
+                properties:
+                  notificationKey:
+                    type: integer
+              example:
+                notificationKey: 1000
+        '400':
+          description: |
+            The request was rejected before the email was saved. No email is sent and no
+            campaign draft is created.
+
+            - The target segment is deleted, does not exist, or has never been calculated:
+              `Segment '<name>' is not active` or
+              `Segment '<name>' is still being calculated; retry when its segmentStatus is READY`.
+            - The HTML of the template is empty (5041, Mail content is empty).
+            - The subject contains an HTML tag or a line break.
+            - A forbidden word set in the application settings appears in the email, including
+              the values in `customParams`.
+            - The send time is outside the email time restriction of the application.
 
   /rest/3.0/addEmail:
     post:
@@ -2540,6 +2664,237 @@ paths:
                   - externalId: user_123
                     msisdn: "905312345678"
                     email: user@example.com
+
+  /rest/3.0/createSegment:
+    post:
+      operationId: createSegment
+      tags: [Segments and Targeting]
+      summary: Create segment
+      description: |
+        Creates a standard (condition-based) segment. The request body is the same as the one
+        the panel uses to save a segment, and the same rules apply. Segments created through
+        the REST API appear in the panel, and their Targeting Rules are filled from the request.
+
+        ### How it works
+
+        - The segment name must be unique in the application.
+        - At least one condition is required.
+        - The segment limit of the application package applies.
+        - The calculation is asynchronous. The segment is saved with `segmentStatus`
+          `WAITING_CALCULATE` and becomes `READY` when the calculation finishes. Follow the
+          status with `getSegment`, and wait for `READY` before sending to the segment.
+        - The server sets `createdBy` to `REST`. The status, the user count, the segment type
+          and the business unit are not read from the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentRequest'
+            examples:
+              profileAttribute:
+                summary: Users whose email address contains a value
+                value:
+                  segment:
+                    segmentName: Email contains example
+                  profile:
+                    type: PROFILE
+                    expression:
+                      code: email
+                      operator: CONTAINS
+                      values: [example]
+              conditionGroup:
+                summary: Email permission and a profile attribute
+                value:
+                  segment:
+                    segmentName: Email opt-in and email contains example
+                  targetJson:
+                    id: group_1
+                    type: GROUP
+                    logic: AND
+                    conditions:
+                      - type: CHANNEL
+                        operator: EQUALS
+                        value: EMAIL
+                        logic: AND
+                      - type: PROFILE
+                        operator: EQUALS
+                        value: email
+                        expression:
+                          code: email
+                          operator: CONTAINS
+                          values: [example]
+                        logic: AND
+              tagAndProfile:
+                summary: Tag and profile attribute
+                value:
+                  segment:
+                    segmentName: Newsletter subscribers
+                    profileConditionType: AND
+                  tags:
+                    type: TAG
+                    logic: AND
+                    code: TAG_ID
+                  profile:
+                    type: PROFILE
+                    logic: AND
+                    expression:
+                      code: email
+                      operator: CONTAINS
+                      values: [example]
+                  timeZone: Europe/Istanbul
+      responses:
+        '200':
+          description: |
+            The segment was saved and its calculation started. `segmentStatus` is
+            `WAITING_CALCULATE` and `userCount` is `null` until the calculation finishes.
+          x-netmera-verified: '2026-10-08'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+              example:
+                segmentStatus: WAITING_CALCULATE
+                userCount: null
+                createdBy: REST
+                name: Email contains example
+                id: 5
+                status: ACTIVE
+        '400':
+          description: |
+            The segment was not saved:
+
+            - A segment with the same name exists (5025, Segment name must be unique).
+            - The segment limit of the application package is exceeded (5022, Service usage
+              quota is exceeded).
+            - The request has no condition ("Empty criteria").
+
+  /rest/3.0/getSegment:
+    get:
+      operationId: getSegment
+      tags: [Segments and Targeting]
+      summary: Get segment
+      description: |
+        Returns the status and the user count of a segment. Use it to follow the calculation
+        after `createSegment`, `updateSegment` or reopening a segment: the segment can be used
+        as a target when `segmentStatus` is `READY`.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Segment ID, as returned by `createSegment`.
+          schema:
+            type: integer
+          example: 5
+      responses:
+        '200':
+          description: The segment.
+          x-netmera-verified: '2026-10-08'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+              example:
+                segmentStatus: READY
+                userCount: 20
+                createdBy: REST
+                name: Email contains example
+                id: 5
+                status: ACTIVE
+        '400':
+          description: No segment exists with the given ID (5042, Segment not found).
+
+  /rest/3.0/updateSegment:
+    post:
+      operationId: updateSegment
+      tags: [Segments and Targeting]
+      summary: Update segment
+      description: |
+        Replaces the conditions of a segment and calculates it again. The request is the same
+        as for `createSegment`, with the segment ID in `segment.segmentId`. The Targeting Rules
+        of the segment in the panel are updated to match the request.
+
+        The calculation is asynchronous. The response shows `WAITING_CALCULATE`; read the
+        segment with `getSegment` to see the new result.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SegmentRequest'
+            example:
+              segment:
+                segmentId: 5
+                segmentName: Email contains example
+              profile:
+                type: PROFILE
+                expression:
+                  code: email
+                  operator: CONTAINS
+                  values: [example.com]
+      responses:
+        '200':
+          description: The segment was updated and its calculation started again.
+          x-netmera-verified: '2026-10-08'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+              example:
+                segmentStatus: WAITING_CALCULATE
+                userCount: null
+                createdBy: null
+                name: Email contains example
+                id: 5
+                status: ACTIVE
+
+  /rest/3.0/changeSegmentStatus:
+    post:
+      operationId: changeSegmentStatus
+      tags: [Segments and Targeting]
+      summary: Change segment status
+      description: |
+        Deletes a segment, or reopens a deleted one. The request has no body; the segment ID
+        and the new status are sent in the query string.
+
+        - A segment that an active campaign uses cannot be deleted.
+        - A reopened segment counts against the segment limit of the application package
+          again, and it is calculated again. Wait for `READY` with `getSegment` before sending
+          to it.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: Segment ID.
+          schema:
+            type: integer
+          example: 5
+        - name: status
+          in: query
+          required: true
+          description: |
+            `DELETED` deletes the segment. `ACTIVE` reopens a deleted segment.
+          schema:
+            type: string
+            enum: [DELETED, ACTIVE]
+          example: DELETED
+      responses:
+        '200':
+          description: |
+            The status was changed. After a delete, `status` is `DELETED` and `segmentStatus`
+            is `WAITING_DELETED`.
+          x-netmera-verified: '2026-10-08'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SegmentResponse'
+              example:
+                segmentStatus: WAITING_DELETED
+                userCount: 72
+                createdBy: REST
+                name: Email contains example
+                id: 5
+                status: DELETED
 
   /rest/3.0/enableMail:
     post:
@@ -4416,6 +4771,154 @@ components:
           description: WhatsApp numbers.
           items:
             type: string
+
+    SegmentRequest:
+      type: object
+      description: |
+        Segment definition used by `createSegment` and `updateSegment`. It is the same body the
+        panel sends when it saves a segment. Send at least one condition, either as separate
+        condition objects (`profile`, `tags`, `behaviors`, `response`, `pushEnabled`) or as a
+        condition tree in `targetJson`.
+      required: [segment]
+      properties:
+        segment:
+          type: object
+          required: [segmentName]
+          properties:
+            segmentName:
+              type: string
+              description: Segment name. Must be unique in the application.
+            segmentId:
+              type: integer
+              description: ID of the segment to update. Required by `updateSegment` only.
+            segmentDescription:
+              type: string
+              description: Segment description.
+            tagConditionType:
+              type: string
+              description: |
+                `AND` or `OR`. How the tag condition joins the conditions before it.
+            profileConditionType:
+              type: string
+              description: |
+                `AND` or `OR`. How the profile condition joins the conditions before it.
+            responseConditionType:
+              type: string
+              description: |
+                `AND` or `OR`. How the campaign response condition joins the conditions before
+                it.
+            behaviorConditionType:
+              type: string
+              description: |
+                `AND` or `OR`. How the behavior condition joins the conditions before it.
+        profile:
+          type: object
+          description: |
+            Profile attribute condition. `expression.code` is the code of the profile
+            attribute, listed in the panel under **Developers > Profile Attributes > Code**.
+            The examples use the `CONTAINS` operator.
+          properties:
+            type:
+              type: string
+              description: '`PROFILE`.'
+            logic:
+              type: string
+              description: '`AND` or `OR`.'
+            expression:
+              type: object
+              properties:
+                code:
+                  type: string
+                operator:
+                  type: string
+                values:
+                  type: array
+                  items:
+                    type: string
+          additionalProperties: true
+        tags:
+          type: object
+          description: Tag condition. `code` is the ID of the tag.
+          properties:
+            type:
+              type: string
+              description: '`TAG`.'
+            logic:
+              type: string
+              description: '`AND` or `OR`.'
+            code:
+              type: string
+          additionalProperties: true
+        behaviors:
+          type: object
+          description: Behavior condition.
+          additionalProperties: true
+        behaviorAggregations:
+          type: object
+          description: Aggregated behavior condition.
+          additionalProperties: true
+        response:
+          type: object
+          description: Campaign response condition.
+          additionalProperties: true
+        pushEnabled:
+          description: Push permission condition.
+        targetJson:
+          type: object
+          description: |
+            Condition tree of the panel, for segments that combine several conditions with
+            `AND` and `OR`. A group has `type` `GROUP`, a `logic` that joins its conditions,
+            and a list of `conditions`. A condition can be a channel permission (`CHANNEL`), a
+            profile attribute (`PROFILE`) or a nested group.
+          properties:
+            id:
+              type: string
+            type:
+              type: string
+            logic:
+              type: string
+            conditions:
+              type: array
+              items:
+                type: object
+                additionalProperties: true
+          additionalProperties: true
+        group:
+          type: object
+          description: Condition tree in the format of the earlier panel.
+          additionalProperties: true
+        timeZone:
+          type: string
+          description: |
+            IANA time zone, for example `Europe/Istanbul`, used for relative dates in behavior
+            conditions such as "today" or "last 7 days". When it is not sent, the time zone of
+            the application is used.
+
+    SegmentResponse:
+      type: object
+      required: [id, name, status, segmentStatus]
+      properties:
+        id:
+          type: integer
+          description: Segment ID.
+        name:
+          type: string
+          description: Segment name.
+        status:
+          type: string
+          description: '`ACTIVE` or `DELETED`.'
+        segmentStatus:
+          type: string
+          description: |
+            Calculation status. `WAITING_CALCULATE` while the segment is calculated, `READY`
+            when it can be used as a target, `WAITING_DELETED` after a delete.
+        userCount:
+          type: [integer, 'null']
+          description: |
+            Number of users in the segment. `null` until the first calculation finishes.
+        createdBy:
+          type: [string, 'null']
+          description: '`REST` for segments created through the REST API.'
 
     Device:
       type: object
