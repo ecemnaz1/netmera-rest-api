@@ -1,0 +1,12 @@
+# Keeps the pinned GitHub Actions (commit SHAs in .github/workflows) up to date.
+# Redocly CLI and PyYAML are pinned inline in the workflow; update them by hand when
+# Dependabot opens an Actions update, and check their release notes first.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    open-pull-requests-limit: 3
+    commit-message:
+      prefix: ci
