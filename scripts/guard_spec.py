@@ -13,7 +13,7 @@ Checks:
      overrides or removes it.
   3. Endpoints that delete data in bulk hide the Test it panel (x-hideTryItPanel: true).
      Endpoints that can send to many users either hide it, or open the description with a
-     danger hint that starts "**Test it sends a real" and use a default (first) example that
+     danger hint that starts "**Requests sent from Test it are real.**" and use a default (first) example that
      does not set `sendToAll: true`. Any endpoint whose request body has a `sendToAll` field
      is treated as a bulk send automatically.
   4. No request proxy extension, no active HTML (script, iframe, event handlers,
@@ -59,7 +59,7 @@ BULK_SEND = {
     "sendEmailAndSms",       # target supports sendToAll
     "sendBulkEmail",         # audience or sendToAll email
 }
-WARNING_MARK = '{% hint style="danger" %}\n**Test it sends a real'
+WARNING_MARK = '{% hint style="danger" %}\n**Requests sent from Test it are real.**'
 
 
 def first_example(spec, content):
@@ -231,7 +231,7 @@ def main():
             elif (op_id in BULK_SEND or has_send_to_all(spec, body)) and not hidden:
                 if WARNING_MARK not in (op.get("description") or ""):
                     errors.append(f"{op_id} can send to many users and shows Test it; add the "
-                                  "'Test it sends a real ...' danger hint after the first paragraph "
+                                  "'Requests sent from Test it are real.' danger hint after the first paragraph "
                                   "or set x-hideTryItPanel: true")
                 if sends_to_all(first_example(spec, body)):
                     errors.append(f"{op_id} shows Test it with a default example that sets sendToAll: true; "

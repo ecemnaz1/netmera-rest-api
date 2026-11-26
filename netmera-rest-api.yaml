@@ -177,10 +177,12 @@ paths:
         users. Use it for campaigns that go to many users at once.
 
         {% hint style="danger" %}
-        **Test it sends a real push.** With a production API key the notification goes to every user
-        the target matches, and `sendToAll: true` reaches all users of the app. Test with a test
-        application's key, or target a tag that only your test devices carry. The default example
-        targets the `test-users` tag and returns HTTP 400, code `2009`, if the tag does not exist.
+        **Requests sent from Test it are real.** Test it opens a request panel; pressing **Send** in
+        that panel calls the live API with the key you enter. With a production API key the
+        notification goes to every user the target matches, and `sendToAll: true` reaches all users
+        of the app. Use a test application's key, or target a tag that only your test devices carry.
+        The default example targets the `test-users` tag and returns HTTP 400, code `2009`, if the tag
+        does not exist.
         {% endhint %}
 
         ### Capabilities
@@ -1521,9 +1523,10 @@ paths:
         definition is referenced by its `notificationKey`.
 
         {% hint style="danger" %}
-        **Test it sends a real notification.** With a production API key the message goes to every user,
-        device or address in the request, and an array sends to each of them. Test with a test
-        application's key or with your own test user.
+        **Requests sent from Test it are real.** Test it opens a request panel; pressing **Send** in
+        that panel calls the live API with the key you enter. With a production API key the message
+        goes to every user, device or address in the request, and an array sends to each of them. Use
+        a test application's key or your own test user.
         {% endhint %}
 
         ### Capabilities
@@ -1996,9 +1999,10 @@ paths:
         message for `groupId` and queues it for sending.
 
         {% hint style="danger" %}
-        **Test it sends a real update.** With a production API key it starts, updates or ends the Live
-        Activity on every iOS device that holds an activity for the `groupId`. Test with a test
-        application's key or a `groupId` used only by your test devices.
+        **Requests sent from Test it are real.** Test it opens a request panel; pressing **Send** in
+        that panel calls the live API with the key you enter. With a production API key it starts,
+        updates or ends the Live Activity on every iOS device that holds an activity for the
+        `groupId`. Use a test application's key or a `groupId` used only by your test devices.
         {% endhint %}
 
         ### Capabilities
@@ -2156,9 +2160,10 @@ paths:
         created in the panel. The same endpoint creates a template for sending email or SMS to a user.
 
         {% hint style="danger" %}
-        **Test it sends a real email or SMS.** With a production API key the message goes to the
-        recipients in `target`, and `sendToAll: true` reaches all users of the app. Test with a test
-        application's key or with your own address or phone number.
+        **Requests sent from Test it are real.** Test it opens a request panel; pressing **Send** in
+        that panel calls the live API with the key you enter. With a production API key the email or
+        SMS goes to the recipients in `target`, and `sendToAll: true` reaches all users of the app.
+        Use a test application's key or your own address or phone number.
         {% endhint %}
 
         ### Capabilities
@@ -2644,10 +2649,12 @@ paths:
         Netmera, so the template does not need to be updated in the panel for each campaign.
 
         {% hint style="danger" %}
-        **Test it sends a real email.** With a production API key the template goes to every user the
-        target matches, and `sendToAll: true` reaches all users of the app. Test with a test
-        application's key, or target a tag that only your test users carry. The default example targets
-        the `test-users` tag and returns HTTP 400, code `2009`, if the tag does not exist.
+        **Requests sent from Test it are real.** Test it opens a request panel; pressing **Send** in
+        that panel calls the live API with the key you enter. With a production API key the template
+        goes to every user the target matches, and `sendToAll: true` reaches all users of the app. Use
+        a test application's key, or target a tag that only your test users carry. The default
+        example targets the `test-users` tag and returns HTTP 400, code `2009`, if the tag does not
+        exist.
         {% endhint %}
 
         ### Capabilities

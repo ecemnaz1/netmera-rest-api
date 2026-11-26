@@ -40,7 +40,7 @@ review. `scripts/guard_spec.py` runs in CI on every pull request and push and fa
   Notification, Send Transactional Notification, Start, Update or End Live Activity, Send
   Email or SMS and Send Bulk Email (`BULK_SEND`) keep Test it open, so each one opens its
   description, right after the first paragraph, with a `{% hint style="danger" %}` block that
-  starts "**Test it sends a real ...**", and its first example must not set
+  starts "**Requests sent from Test it are real.**", and its first example must not set
   `sendToAll: true`; the bulk examples target the `test-users` tag, which fails with code
   `2009` when the tag does not exist. Any new endpoint whose body has `sendToAll` is held to
   the same rule automatically.
